@@ -10,11 +10,14 @@ Each library is documented, and none are minified. If you want a minified versio
 ## Plug-ins in the collection
 
 ### *table*
-A handy little for quickly reading data from an HTML table.
+A handy little plug-in for quickly reading data from an HTML table.
 
+#### Syntax:
 *object[]* d3.table(*HTMLElement|string* table[, *object* label[, *object* body]]);
-Example: var data = d3.table('#visitor-by-os', {row:0}, {start:1});
-Example: var data = d3.table('#visitor-by-os', {column:0}, {start:1, end:8});
+
+Examples:
+* var data = d3.table('#visitor-by-os', {row:0}, {start:1});
+* var data = d3.table('#visitor-by-os', {column:0}, {start:1, end:8});
 
 #### Requires:
 * d3 --- http://d3js.org/d3.v3.min.js
