@@ -23,4 +23,4 @@ Examples:
 * d3 --- http://d3js.org/d3.v3.min.js
 
 #### Demo:
-* [link](http://products.cathmhaol.com/prototypes/d3-table/)
+* [The Cathmhaol](http://products.cathmhaol.com/prototypes/d3-table/)
