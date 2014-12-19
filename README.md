@@ -22,4 +22,4 @@ Example: var data = d3.table('#visitor-by-os', {column:0}, {start:1, end:8});
 * d3 --- http://d3js.org/d3.v3.min.js
 
 #### Demo:
-* coming soon
+* [link](http://products.cathmhaol.com/prototypes/d3-table/)
