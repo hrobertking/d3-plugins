@@ -1,8 +1,6 @@
 d3-plugins
 ==========
 
-# d3-plugins
-
 ## What is this?
 
 **d3-plugins** are JavaScript plug-ins for the awesomeness that is d3.js.
