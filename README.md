@@ -15,6 +15,7 @@ Adds jQuery traversal methods to D3 selections.
 #### Syntax:
 - ***selection* *selection*.children([*string* selector])**: Get the children of each element in the set of matched elements, optionally filtered by a selector.
 - ***selection* *selection*.closest([*string* selector])**: For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
+- ***selection* *selection*.contents([*string* selector])**: Get the children of each element in the set of matched elements, including text and comment nodes.
 - ***selection* *selection*.find([*string* selector])**: Get the descendants of each element in the current set of matched elements, filtered by a selector.
 - ***selection* *selection*.first()**: Returns the first element in the selection
 - ***number* *selection*.height()**: Returns the height, in pixels, of the item
@@ -22,6 +23,7 @@ Adds jQuery traversal methods to D3 selections.
 - ***selection* *selection*.next([*string* selector])**: Get the immediately following sibling of each element in the set of matched elements. If a selector is provided, it retrieves the next sibling only if it matches that selector.
 - ***selection* *selection*.nextAll([*string* selector])**: Get all following siblings of each element in the set of matched elements, optionally filtered by a selector.
 - ***selection* *selection*.nextUntil([*string* selector[, *string* filter]])**: Get all following siblings of each element up to but not including the element matched by the selector.
+- ***selection* *selection*.not([*string* selector])**: Remove elements from the set of matched elements.
 - ***selection* *selection*.offsetParent([*string* selector])**: Get the closest ancestor element that is positioned.
 - ***selection* *selection*.parent([*string* selector])**: Get the parent of each element in the current set of matched elements, optionally filtered by a selector.
 - ***selection* *selection*.parents([*string* selector])**: Get the ancestors of each element in the current set of matched elements, optionally filtered by a selector
@@ -33,10 +35,11 @@ Adds jQuery traversal methods to D3 selections.
 - ***number* *selection*.width()**: Returns the width, in pixels, of the item
 
 Examples:
-- var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active')
-- var sel = d3.select('p').first()
-- var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active').next()
-- var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active').prevUntil('#image-3')
+- var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active');
+- var sel = d3.select('p').first();
+- var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active').next();
+- var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active').prevUntil('#image-3');
+- var sel = d3.select('.control.clicked').closest('.filmstrip').children().not('active');
 
 #### Requires:
 - d3 --- http://d3js.org/d3.v3.min.js
