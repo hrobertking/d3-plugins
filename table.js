@@ -1,4 +1,6 @@
 (function() {
+  'use strict';
+
   /**
    * Returns a data collection drawn from an HTML table
    * @return  {object[]}
