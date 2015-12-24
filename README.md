@@ -9,6 +9,43 @@ Each library is documented, and none are minified. If you want a minified versio
 
 ## Plug-ins in the collection
 
+### *earth*
+Adds a marked map data visualization.
+
+#### Syntax:
+*object* d3.geo.earth(*string* container[, *number* width[, *string* style[, *string|HTMLElement* descriptor]]])
+
+- ***string* *object*.getBorderColor()**: Returns the hexadecimal value used when drawing borders.
+- ***void* *object*.setBorderColor(*string* color)**: Sets the hexadecimal value used when drawing borders. The parameter <em>color</em> is the hexadecimal color to use - #663399, for example.
+- ***HTMLElement* *object*.getElement()**: Returns the element that contains the SVG.
+- ***void* *object*.setElement(*HTMLElement|string* element)**: Sets the element that will contain the SVG. The parameter <em>element</em> is the element to contain the SVG, which is the 'body' element by default. An HTMLElement or a string representing the id of the element may be passed.
+- ***string* *object*.getMarkerColor()**: Returns the hexadecimal value used when drawing the markers.
+- ***void* *object*.setMarkerColor(*string* color)**: Sets the hexadecimal value used when draing the markers. The parameter <em>color</em> is The hexadecimal color to use - #663399, for example.
+- ***object* *object*.getMarkerFile()**: Returns the URI and type used when retrieving the marker file.
+- ***void* *object*.setMarkerFile(*string|object* uri, string type)**: Sets the URI used when retrieving the marker file. The parameter <em>uri</em> is the URI can be either a string, or an object containing both the 'name' and 'type' property. The parameter <em>type</em> is a string containing either 'csv', for comma-separated value files, or 'json', a file in JSON format. A sample can be found at <a href="http://products.cathmhaol.com/prototypes/earth/cities.js" target="_new">http://products.cathmhaol.com/prototypes/earth/cities.js</a>. The properties 'lat' - latitude - and 'lon' - longitude - are required, while 'description', 'size', and 'color' are optional.
+- ***int* *object*.getMarkerSize()**: Returns the size of the marker in pixels.
+- ***void* *object*.setMarkerSize(*int* size)**: Sets the default size. The parameter <em>size</em> is An integer representing the size of the marker in pixels.
+- ***string[] getPalette()**: Gets the colors used when drawing the countries.
+- ***void* *object*.setPalette(string[]|object color)**: Sets the colors used. The parameter <em>color</em> is if a string array is passed, the colors used to draw the countries are set to the array. If an object is used, the border color, marker color, and color array used to generate the countries can be set by passing 'border', 'marker', and 'colors', respectively. For example, <span class="code">{ border:'#333333', marker:'#663399' }</span> will set the border color and marker colors while using the default country colors, whereas <span class="code">{ border:'#333333', colors:['#ff0000', '#ff3333', '#ff6666', '#ff9999', '#ffcccc', '#ffffff'] }</span> will set the border color as well as the colors used to draw countries.
+- ***string* *object*.getTopoFile()**: Returns the URI of the topoJSON file used to draw the map.
+- ***void* *object*.setTopoFile(*string* uri)**: Sets the URI of the topoJSON file used to draw the map. The parameter <em>uri</em> is an absolute or relative URI for a topoJSON file. An example can be found at <a href="http://products.cathmhaol.com/prototypes/earth/world-110m.js" target="_new">http://products.cathmhaol.com/prototypes/earth/world-110m.js</a>.
+- ***void* *object*.addOnCountryClick(*function* handler)**: Adds a click handler to the countries. The parameter <em>handler</em> is the handler is a JavaScript function executed when a country on the map is clicked. The 'this' keyword in the handler function will refer to the country clicked. The properties 'id', which is the id from the topoJSON file, 'iso', which is the ISO 3166 Alpha-2 code for the country, and 'name', which is the name of the country in English are among the properties available through the 'this' object.
+- ***boolean* *object*.rotatable()**: Returns whether or not the map is rotatable, i.e. a globe.
+- ***boolean* *object*.rotating()**: Returns whether or not the map is currently rotating.
+- ***void* *object*.rotationDecrease()**: Decreases the rotational speed of the map.
+- ***void* *object*.rotationIncrease()**: Increases the rotational speed of the map.
+- ***void* *object*.rotationPause()**: Stops the rotation.
+- ***void* *object*.rotationResume()**: Resumes the rotation.
+- ***void* *object*.render(*string* style)**: Draws the map. The parameter <em>style</em> is a string representing the style of map to draw. At this time, '2D' is the only acceptable style, and will draw a Spherical Mercator (traditional) map. Any other value passed, including null, will render a globe.
+
+
+#### Requires:
+- d3 --- http://d3js.org/d3.v3.min.js
+- d3 geo projections --- http://d3js.org/d3.geo.projection.v0.min.js
+- d3 topojson --- http://d3js.org/topojson.v1.min.js
+- a topoJSON data file
+
+
 ### *jquery*
 Adds jQuery traversal methods to D3 selections.
 

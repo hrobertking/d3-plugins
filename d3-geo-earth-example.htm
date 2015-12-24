@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Marked Map Example</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<section>
+			<header>
+				A Data Visualization Example Using A Marked Map and Progressive Enhancement
+			</header>
+			<p>
+				If you have data collected from sites all over the globe, you can now easily represent that
+				data visually on a world map, either using a 2D (Mercator) map or a rotating globe.
+			</p>
+			<p>
+				This used to be difficult, but with topoJSON and D3, it's actually pretty easy. To
+				make it even easier, I've combined those and extended the functionality a little bit to
+				write the d3.geo.earth plugin. <em><strong>Note: the JavaScript file for this plugin
+				and the topoJSON file are in the repo that contains this example file,
+				<a href="https://github.com/hrobertking/d3-plugins" target="_NEW">https://github.com/hrobertking/d3-plugins</a>.
+				Also note that the topoJSON data (typically contained in the world-110.js file) is set
+				as d3.geo.earth.topoJSONdata.</strong></em>
+			</p>
+		</section>
+		<section>
+			<header>
+				Airports Example
+			</header>
+			<p>
+				Let's start with a sample data table, like the one here - which happens to be a list of
+				10 busy airports. You'll notice that the data in the table includes latitude and longitude - 
+				you might need to add that information to your table, but other than that, it's information
+				you may commonly have. To make this prototype easy to understand, I've left off styling and
+				sorting - anything fancy. I've also left off attributes and information that would make
+				this table more accessible - be sure that you include that any time you're writing a table.
+				The only thing I've added to the table is an ID attribute so I can get to it easily. You might
+				also want to hide the longitude and latitude information - as long as it's actually in the
+				table, the code will work.
+			</p>
+			<p>
+				The words 'latitude', 'longitude', 'size', and 'description' are reserved words in the <em>earth</em>
+				plugin. For now, we'll just note that the 'size' property must be an integer and is the number
+				of pixels for the radius of the marker.
+			</p>
+			<p>
+				Using good markup practices, we're going to create our data table with thead and tbody tags and
+				a caption. Your table may be more complex, having more data columns or having hidden columns,
+				and it may also need a description or additional accessibility information, but
+				we're using a simple example so we'll by-pass that for now. That leaves us with the table below.
+			</p>
+			<table id="marker-data">
+				<caption>HTML table with id "marker-data"</caption>
+				<thead>
+					<tr>
+						<th>Country</th><th>City</th><th>Activity</th><th>Name</th><th>Latitude</th><th>Longitude</th><th>Size</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td>US</td><td>ATL</td><td>68343</td><td>Hartsfield Jackson Atlanta International</td><td>33.636719</td><td>-84.428067</td><td>16</td></tr>
+					<tr><td>US</td><td>ORD</td><td>59692</td><td>Chicago O'Hare International</td><td>41.978603</td><td>-87.904842</td><td>14</td></tr>
+					<tr><td>US</td><td>DFW</td><td>56496</td><td>Dallas Fort Worth International</td><td>32.896828</td><td>-97.037997</td><td>12</td></tr>
+					<tr><td>US</td><td>LAX</td><td>51396</td><td>Los Angeles International</td><td>33.942536</td><td>-118.408075</td><td>10</td></tr>
+					<tr><td>CN</td><td>PEK</td><td>48226</td><td>Capital International</td><td>40.080111</td><td>116.584556</td><td>10</td></tr>
+					<tr><td>US</td><td>CLT</td><td>44583</td><td>Charlotte Douglas International</td><td>35.214</td><td>-80.943139</td><td>8</td></tr>
+					<tr><td>US</td><td>DEN</td><td>44438</td><td>Denver International</td><td>39.861656</td><td>-104.673178</td><td>8</td></tr>
+					<tr><td>US</td><td>LAS</td><td>41164</td><td>McCarran International</td><td>36.080056</td><td>-115.15225</td><td>6</td></tr>
+					<tr><td>US</td><td>IAH</td><td>39808</td><td>George Bush Intercontinental</td><td>29.984433</td><td>-95.341442</td><td>6</td></tr>
+					<tr><td>GB</td><td>LHR</td><td>37680</td><td>London Heathrow</td><td>51.4775</td><td>-0.461389</td><td>4</td></tr>
+				</tbody>
+			</table>
+
+			<p>
+				Now that you have the table, you <em>could</em> use the d3.table plugin (also available in the repo this example page is in),
+				but that's another example. For the Marked Map visualization, you'll need to add the D3 and plugin resources to your page (shown below)
+				and add a few lines of JavaScript and HTML to create the object and include it in your page.
+			</p>
+			<header>Markup</header>
+			<p>
+				The HTML included simply acts as a placeholding container in which the marked map will be rendered. In our example, we're giving the
+				container an ID attribute set to <em>map</em>.
+			</p>
+			<blockquote>
+				&lt;div id="map"&gt; <br/>
+				&nbsp;&nbsp;&lt;noscript&gt; <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt; <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The map ordinarily displayed here is only available to users with JavaScript enabled. <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;/p&gt; <br/>
+				&nbsp;&nbsp;&lt;/noscript&gt; <br/>
+				&lt;/div&gt; <br/>
+			</blockquote>
+
+			<header>D3 source</header>
+			<ul>
+				<li><a href="http://d3js.org/d3.v3.min.js">http://d3js.org/d3.v3.min.js</a>
+				<li><a href="http://d3js.org/d3.geo.projection.v0.min.js">http://d3js.org/d3.geo.projection.v0.min.js</a>
+				<li><a href="http://d3js.org/topojson.v1.min.js">http://d3js.org/topojson.v1.min.js</a>
+			</ul>
+			<header>Our <em>earth</em> plugin</header>
+			<ul>
+				<li><a href="https://github.com/hrobertking/d3-plugins/blob/master/earth.js">https://github.com/hrobertking/d3-plugins/blob/master/earth.js</a></li>
+			</ul>
+			<header>A topoJSON object file</header>
+			<ul>
+				<li><a href="https://github.com/hrobertking/d3-plugins/blob/master/world-110m.js">Our <em>world-110m</em> example</a></li>
+			</ul>
+			<p>
+				Note: the topoJSON file should assign the topoJSON data to <em>d3.geo.earth.topoJSONdata</em>
+			</p>
+
+			<header>Plugin instantiation</header>
+			<blockquote>
+				var oEarth = new d3.geo.earth(document.getElementById('map'))<br />
+				oEarth.markerAnimation('ping');<br />
+				oEarth.markerColor('#000000');<br />
+				oEarth.markerOpacity(0.7);<br />
+				oEarth.addOnCountryClick(function onClick() {<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;alert('this.id = '+this.id+'\n'+<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'this.iso = '+this.iso+'\n'+<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'this.name = '+this.name);<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;return;<br />
+				&nbsp;&nbsp;});<br />
+				oEarth.addOnMarkerClick(function onClick() {<br />
+				&nbsp;&nbsp;&nbsp;&nbsp;// the 'marker' property of 'this' will contain the properties defined in your data table
+				&nbsp;&nbsp;&nbsp;&nbsp;alert('Name:&nbsp;'+this.marker.Name+'\nActivity:&nbsp;'+this.marker.Activity);<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;return;<br />
+				&nbsp;&nbsp;});<br />
+				oEarth.parseMarkerData(document.getElementById('marker-data'));<br />
+			</blockquote>
+		</section>
+
+		<section class="demo">
+			<header>Code in Action</header>
+			<div id="map">
+				<noscript>
+					<p>
+						The map ordinarily displayed here is only available to users with JavaScript enabled.
+					</p>
+				</noscript>
+			</div>
+			<button id="rotateToggle">Pause/Resume</button>
+			<button id="rotateFaster" title="Faster">++</button>
+			<button id="rotateSlower" title="Slower">--</button>
+			<button id="transition" title="Transition">&#8635;</button>
+		</section>
+
+		<script src="http://products.cathmhaol.com/prototypes/earth/d3.v3.min.js"></script>
+		<script src="http://products.cathmhaol.com/prototypes/earth/d3.geo.projection.v0.min.js"></script>
+		<script src="http://products.cathmhaol.com/prototypes/earth/topojson.v1.min.js"></script>
+		<script src="earth.js"></script>
+		<script src="world-110m.js"></script>
+
+		<script>
+			var oEarth = new d3.geo.earth(document.getElementById('map'))
+			  , btn = document.getElementById("rotateToggle")
+			  , fas = document.getElementById("rotateFaster")
+			  , slo = document.getElementById("rotateSlower")
+			  , trn = document.getElementById("transition"), proj
+			;
+
+			oEarth.markerAnimation('ping');
+			oEarth.markerColor('#000000');
+			oEarth.markerOpacity(0.7);
+			oEarth.addOnCountryClick(function onClick() {
+								alert('this.id = '+this.id+'\nthis.iso = '+this.iso+'\nthis.name = '+this.name);
+								return;
+							});
+			oEarth.addOnMarkerClick(function onClick() {
+						        alert('Name: '+this.marker.Name+'\nActivity: '+this.marker.Activity);
+						    });
+			oEarth.parseMarkerData(document.getElementById('marker-data'));
+            
+			proj = oEarth.style();
+		 	if (btn) {
+				btn.onclick = function() {
+					var is_rotating = oEarth.rotating(), can_rotate = oEarth.rotatable();
+					if (is_rotating) {
+						oEarth.rotationStop();
+					} else if (can_rotate) {
+						oEarth.rotationResume();
+					}
+				};
+			}
+			if (fas) {
+				fas.onclick = oEarth.rotationIncrease
+			}
+			if (slo) {
+				slo.onclick = oEarth.rotationDecrease;
+			}
+			if (trn) {
+				trn.onclick = function() {
+					if (oEarth.style() === proj) {
+						oEarth.transition('Equirectangular');
+					} else {
+						oEarth.transition(proj);
+					}
+				};
+			}
+		</script>
+	</body>
+</html>
