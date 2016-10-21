@@ -2127,8 +2127,8 @@
                        , D3COLORS(9)
                        , D3COLORS(10)
             ],
-            marker: '#ff0000',
-            markerOpacity: '1.0',
+            marker: '#000000',
+            markerOpacity: '0.7',
             ocean: '#d8ffff'
           }
         , PROJECTION_PATH
@@ -2435,7 +2435,7 @@
          * make sure the polyfill for the Date.now method is present
          */
         if (!Date.now) {
-          Date.now = function now() {
+          Date.prototype.now = function now() {
             return (new Date()).getTime();
           };
         }
