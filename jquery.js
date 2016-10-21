@@ -12,31 +12,43 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
-      // only get HTMLElement types in childNodes, no 'text' types
+      /**
+       * only get HTMLElement types in childNodes, no 'text' types
+       */
       for (child in htmlelement.childNodes) {
         if (htmlelement.childNodes[child].nodeType === 1) {
           collection.push(htmlelement.childNodes[child]);
         }
       }
 
-      // convert the array to a d3 selection
+      /**
+       * convert the array to a d3 selection
+       */
       collection = d3.select(collection);
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // filter if a selector is specified
+      /**
+       * filter if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -50,22 +62,30 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.parentNode;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // start with the parent of the current selection
+      /**
+       * start with the parent of the current selection
+       */
       collection = d3.select(htmlelement);
       if (selector) {
         collection = collection.filter(selector);
 
-        // loop while a parent exists and there is not a match found
+        /**
+         * loop while a parent exists and there is not a match found
+         */
         while (!collection.size() && htmlelement) {
           collection = d3.select(htmlelement.parentNode).filter(selector);
           htmlelement = htmlelement.parentNode;
@@ -73,7 +93,9 @@
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -87,23 +109,31 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {  
       collection = d3.selectAll(htmlelement.childNodes);
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // filter if a selector is specified
+      /**
+       * filter if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -115,15 +145,21 @@
   d3.selection.enter.prototype.find = d3.selection.prototype.find = function(selector) {
     var collection = this;
 
-    // validate the selector
+    /**
+     * validate the selector
+     */
     selector = (typeof selector === 'string') ? selector : null;
 
-    // select if a selector is specified
+    /**
+     * select if a selector is specified
+     */
     if (selector) {
       collection = collection.selectAll(selector);
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -151,7 +187,9 @@
   d3.selection.enter.prototype.last = d3.selection.prototype.last = function() {
     var htmlelement = this;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.pop();
     }
@@ -169,23 +207,31 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       collection = d3.select(htmlelement.nextElementSibling);
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // select if a selector is specified
+      /**
+       * select if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -199,30 +245,40 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.nextElementSibling;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // get all the siblings and turn the array of nodes into a selection
+      /**
+       * get all the siblings and turn the array of nodes into a selection
+       */
       while (htmlelement) {
         collection.push(htmlelement);
         htmlelement = htmlelement.nextElementSibling
       }
       collection = d3.select(collection);
 
-      // select if a selector is specified
+      /**
+       * select if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -238,17 +294,23 @@
       , candidate
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.nextElementSibling;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // get all the siblings and turn the array of nodes into a selection
+      /**
+       * get all the siblings and turn the array of nodes into a selection
+       */
       while (htmlelement) {
         candidate = d3.select(htmlelement).filter(selector);
         if (selector && candidate.size()) {
@@ -260,13 +322,17 @@
       }
       collection = d3.select(collection);
 
-      // filter if a filter is specified
+      /**
+       * filter if a filter is specified
+       */
       if (filter) {
         collection = collection.filter(filter);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -276,7 +342,9 @@
    * @param   {string} selector
    */
   d3.selection.enter.prototype.not = d3.selection.prototype.not = function(selector) {
-    // example - d3.select('svg').selectAll('*:not(' + selector + ')');
+    /**
+     * example - d3.select('svg').selectAll('*:not(' + selector + ')');
+     */
     var collection = [ ]
       , e_index
       , element
@@ -285,15 +353,21 @@
       , groups = this
     ;
 
-    // drill down to the groups
+    /**
+     * drill down to the groups
+     */
     while (!groups[0][0].nodeType) {
       groups = groups.shift();
     }
 
-    // loop through the groups
+    /**
+     * loop through the groups
+     */
     for (g_index = 0; g_index < groups.length; g_index += 1) {
       group = groups[g_index];
-      // loop through the elements in the groups
+      /**
+       * loop through the elements in the groups
+       */
       for (e_index = 0; e_index < group.length; e_index += 1) {
         if (d3.select(group[e_index]).filter('*:not(' + selector + ')').size()) {
           collection.push(group[e_index]);
@@ -301,7 +375,9 @@
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -316,7 +392,9 @@
       , positioned = /relative|absolute|fixed/i
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
@@ -329,7 +407,9 @@
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -343,23 +423,31 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       collection = d3.select(htmlelement.parentNode);
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // select if a selector is specified
+      /**
+       * select if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -373,30 +461,40 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.parentNode;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // get all the parents and turn the array of nodes into a selection
+      /**
+       * get all the parents and turn the array of nodes into a selection
+       */
       while (htmlelement) {
         collection.push(htmlelement);
         htmlelement = htmlelement.parentNode;
       }
       collection = d3.selectAll(collection);
 
-      // select if a selector is specified
+      /**
+       * select if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -412,17 +510,23 @@
       , candidate
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.parentNode;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // get all the siblings and turn the array of nodes into a selection
+      /**
+       * get all the siblings and turn the array of nodes into a selection
+       */
       while (htmlelement) {
         candidate = d3.select(htmlelement).filter(selector);
         if (selector && candidate.size()) {
@@ -434,13 +538,17 @@
       }
       collection = d3.select(collection);
 
-      // filter if a filter is specified
+      /**
+       * filter if a filter is specified
+       */
       if (filter) {
         collection = collection.filter(filter);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -454,23 +562,31 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       collection = d3.select(htmlelement.previousElementSibling);
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // select if a selector is specified
+      /**
+       * select if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -484,30 +600,40 @@
       , htmlelement = this.node()
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.previousElementSibling;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // get all the siblings and turn the array of nodes into a selection
+      /**
+       * get all the siblings and turn the array of nodes into a selection
+       */
       while (htmlelement) {
         collection.push(htmlelement);
         htmlelement = htmlelement.previousElementSibling
       }
       collection = d3.select(collection);
 
-      // select if a selector is specified
+      /**
+       * select if a selector is specified
+       */
       if (selector) {
         collection = collection.filter(selector);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -523,17 +649,23 @@
       , candidate
     ;
 
-    // drill down to the actual element
+    /**
+     * drill down to the actual element
+     */
     while (htmlelement instanceof Array) {
       htmlelement = htmlelement.shift();
     }
     if (htmlelement.nodeType === 1) {
       htmlelement = htmlelement.previousElementSibling;
 
-      // validate the selector
+      /**
+       * validate the selector
+       */
       selector = (typeof selector === 'string') ? selector : null;
 
-      // get all the siblings and turn the array of nodes into a selection
+      /**
+       * get all the siblings and turn the array of nodes into a selection
+       */
       while (htmlelement) {
         candidate = d3.select(htmlelement).filter(selector);
         if (selector && candidate.size()) {
@@ -545,13 +677,17 @@
       }
       collection = d3.select(collection);
 
-      // filter if a filter is specified
+      /**
+       * filter if a filter is specified
+       */
       if (filter) {
         collection = collection.filter(filter);
       }
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 
@@ -565,10 +701,14 @@
       , htmlelement
     ;
 
-    // validate the selector
+    /**
+     * validate the selector
+     */
     selector = (typeof selector === 'string') ? selector : null;
 
-    // get all the siblings and turn the array of nodes into a selection
+    /**
+     * get all the siblings and turn the array of nodes into a selection
+     */
     htmlelement = this.node().previousElementSibling
     while (htmlelement) {
       collection.push(htmlelement);
@@ -581,12 +721,16 @@
     }
     collection = d3.select(collection);
 
-    // select if a selector is specified
+    /**
+     * select if a selector is specified
+     */
     if (selector) {
       collection = collection.filter(selector);
     }
 
-    // return any elements that match the selector
+    /**
+     * return any elements that match the selector
+     */
     return collection;
   };
 

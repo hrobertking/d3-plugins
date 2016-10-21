@@ -25,10 +25,14 @@
       callback = callback || config.callback;
 
       if (table) {
-        // default format is data in rows
+        /**
+         * default format is data in rows
+         */
         if (!isNaN(config.row) || isNaN(config.column)) {
-          // get the property names from either the specified
-          // row or the first row of the thead or table
+          /**
+           * get the property names from either the specified
+           * row or the first row of the thead or table
+           */
           if (!isNaN(config.row)) {
             table.selectAll('tr').each(function(d, i) {
               if (i === config.row) {
@@ -46,8 +50,10 @@
                  });
           }
 
-          // get all the rows and check the row index
-          // against any specified config
+          /**
+           * get all the rows and check the row index
+           * against any specified config
+           */
           if (props.length) {
             (table.selectAll('tbody') || table)
               .selectAll('tr').each(function(d, i) {
@@ -64,7 +70,9 @@
               });
           }
         } else {
-          // get the property names from the specified column
+          /**
+           * get the property names from the specified column
+           */
           table.selectAll('tr').each(function() {
             d3.select(this)
                 .selectAll('td, th').each(function(d, i) {
@@ -74,8 +82,10 @@
                  });
           });
 
-          // get all the rows and check the row index
-          // against any specified config
+          /**
+           * get all the rows and check the row index
+           * against any specified config
+           */
           if (props.length) {
             table.selectAll('tr').each(function(d, i) {
                 var property = i;
@@ -94,7 +104,9 @@
         }
       }
 
-      // normalize the array
+      /**
+       * normalize the array
+       */
       for (z in collection) {
         data.push(collection[z]);
       }
@@ -103,6 +115,9 @@
         callback.call(this, null, data);
       }
 
+      /**
+       * return the dataset (object array)
+       */
       return data;
     } catch (ignore) {
       if (callback) {

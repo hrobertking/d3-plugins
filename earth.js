@@ -61,7 +61,9 @@
      * @default  "#ff0000"
      */
     this.borderColor = function(value) {
-      // validate that we have a hexadecimal color that is exactly 6 bytes
+      /**
+       * validate that we have a hexadecimal color that is exactly 6 bytes
+       */
       if ((/^\#[A-F0-9]{6}/i).test(value)) {
         PALETTE.border = value;
       }
@@ -73,7 +75,9 @@
      * @type     {HTMLElement}
      */
     this.element = function(value) {
-      // if a string is passed, try to get an element with that id
+      /**
+       * if a string is passed, try to get an element with that id
+       */
       value = getElement(value);
       if (value) {
         CONTAINER = value;
@@ -86,7 +90,9 @@
      * @type     {string[]}
      */
     this.events = function(value) {
-      // this is read-only
+      /**
+       * READ-ONLY
+       */
       return EVENTS;
     };
 
@@ -95,7 +101,9 @@
      * @type     {string}
      */
     this.id = function(value) {
-      // this is read-only
+      /**
+       * READ-ONLY
+       */
       return ID;
     };
 
@@ -129,7 +137,9 @@
      * @default  "#ff0000"
      */
     this.markerColor = function(value) {
-      // validate that we have a hexadecimal color that is exactly 6 bytes
+      /**
+       * validate that we have a hexadecimal color that is exactly 6 bytes
+       */
       if ((/^\#[A-F0-9]{6}/i).test(value)) {
         PALETTE.marker = value;
       }
@@ -167,7 +177,9 @@
      * @default  1
      */
     this.markerOpacity = function(value) {
-      // make sure the value is between 0.0 (transparent) and 1.0 (opaque)
+      /**
+       * make sure the value is between 0.0 (transparent) and 1.0 (opaque)
+       */
       if (!isNaN(value)) {
         value = Math.floor(value * 10);
         if (value > -1 && value < 11) {
@@ -213,7 +225,9 @@
         eventname = (eventname || '').toLowerCase();
         for (i = 0; i < EVENTS.length; i += 1) {
           evt = (EVENTS[i] || '').toLowerCase();
-          // check to make sure it's an event that is published
+          /**
+           * check to make sure it's an event that is published
+           */
           if (eventname === evt) {
             handlers = EVENT_HANDLERS[eventname] || [ ];
             handlers.push(handler);
@@ -239,13 +253,17 @@
           , reg = /(\#[A-Z0-9]{6})[^A-Z0-9]?/i
         ;
 
-        // if we get a string, convert it to an array
+        /**
+         * if we get a string, convert it to an array
+         */
         if (typeof colors === 'string') {
           colors = colors.split(reg);
         }
 
         if (colors instanceof Array) {
-          // loop through the colors and if they're not valid, remove them
+          /**
+           * loop through the colors and if they're not valid, remove them
+           */
           for (i = 0; i < colors.length; i += 1) {
             if (!reg.test(colors[i])) {
               colors.splice(i, 1);
@@ -304,35 +322,49 @@
       }
 
       try {
-        // make sure the marker table flag is reset, in case the table is null
+        /**
+         * make sure the marker table flag is reset, in case the table is null
+         */
         MARKER_TABLE = false;
 
-        // normalize the parameter to an HTMLElement
+        /**
+         * normalize the parameter to an HTMLElement
+         */
         table = getElement(table);
         if (table && table.nodeName.toLowerCase() === 'table') {
           DESCRIPTOR = table.parentNode;
           MARKER_DATA = [ ];
 
-          // parse the table
+          /**
+           * parse the table
+           */
           thead = table.getElementsByTagName('thead').item(0);
           tbody = table.getElementsByTagName('tbody').item(0);
           if (thead && tbody) {
-            // get the column headers
+            /**
+             * get the column headers
+             */
             tcells = thead.rows[0].cells;
             for (index = 0; index < tcells.length; index += 1) {
               hdrs.push(tcells[index].innerHTML);
             }
 
-            // get the data
+            /**
+             * get the data
+             */
             tcells = tbody.rows;
             for (index = 0; index < tcells.length; index += 1) {
               MARKER_DATA.push(new DataElement(hdrs, tcells[index]));
             }
 
-            // set the flag so we don't generate the data table again
+            /**
+             * set the flag so we don't generate the data table again
+             */
             MARKER_TABLE = true;
 
-            // fire the event to show we have the data
+            /**
+             * fire the event to show we have the data
+             */
             fire('marker-data');
           }
         }
@@ -346,10 +378,14 @@
      * @param    {string|number} interval
      */
     this.refreshMarkerData = function(interval) {
-      // get marker data
+      /**
+       * get marker data
+       */
       getMarkerData();
 
-      // if an interval is provided, set it to get the marker data
+      /**
+       * if an interval is provided, set it to get the marker data
+       */
       interval = Math.floor(interval || 0);
       if (interval && interval > 59) {
         setInterval(getMarkerData, (interval * 1000));
@@ -374,11 +410,12 @@
         ROTATE_3D = rotates();
       }
       function dragged(d, i) {
-        // the map can only display 180 degrees of longitude and 90 degrees 
-        // of latitude at one time, so we convert the delta in position to
-        // those ranges before we rotate the projection and update the path
-        // elements
-
+        /**
+         * the map can only display 180 degrees of longitude and 90 degrees
+         * of latitude at one time, so we convert the delta in position to
+         * those ranges before we rotate the projection and update the path
+         * elements
+         */
         var lambda = d3.scale.linear().domain([0, WIDTH]).range([0, 180])
           , phi = d3.scale.linear().domain([0, WIDTH]).range([0, -90])
         ;
@@ -680,46 +717,64 @@
         return { topo:id, iso:null, name:null };
       }
 
-      // set the style if it's passed in
+      /**
+       * set the style if it's passed in
+       */
       if (style) {
         STYLE = PROJECTIONS.map(style);
       }
 
-      // we only start rendering if we have a containing element
+      /**
+       * we only start rendering if we have a containing element
+       */
       if (CONTAINER) {
-        // scaleExtent sets the amount of minimum and maximum zoom
-        // in this case, it's 1x to 10x
+        /**
+         * scaleExtent sets the amount of minimum and maximum zoom
+         * in this case, it's 1x to 10x
+         */
          var projection
           , zoom = d3.behavior.zoom().scaleExtent([1, 10]).on('zoom', zoomed)
         ;
 
-        // set global variables
+        /**
+         * set global variables
+         */
         rotationTimerEnd();
         projection = (STYLE || { }).projection;
 
         if (projection) {
-          // create the SVG and initialize the mouse/touch handlers
+          /**
+           * create the SVG and initialize the mouse/touch handlers
+           */
           if (!document.getElementById(ID)) {
-            // create an svg element that is a square - rectangular
-            // maps will display with bottom and top margin, but globes
-            // will take up all available real estate
+            /**
+             * create an svg element that is a square - rectangular
+             * maps will display with bottom and top margin, but globes
+             * will take up all available real estate
+             */
             d3.select(CONTAINER).append('svg')
                 .attr('id', ID)
                 .attr('width', WIDTH)
                 .attr('height', WIDTH)
               ;
 
-            // add the map container
+            /**
+             * add the map container
+             */
             d3.select('#'+ID).append('g').attr('id', ID+'-map');
           }
 
-          // load the topography and draw the detail in the callback
+          /**
+           * load the topography and draw the detail in the callback
+           */
           var cnt = topojson.feature(d3.geo.earth.topoJSONdata, d3.geo.earth.topoJSONdata.objects.countries).features
             , color = d3.scale.ordinal().range(PALETTE.countries)
             , nexto = topojson.neighbors(d3.geo.earth.topoJSONdata.objects.countries.geometries)
           ;
 
-          // we have the geo data so now we can set up everything
+          /**
+           * we have the geo data so now we can set up everything
+           */
           switch (STYLE.shape) {
             case 'sphere':
               projection.scale(WIDTH/2);
@@ -728,19 +783,25 @@
               projection.scale(getScale());
               break;
           }
-          // center the projection
+          /**
+           * center the projection
+           */
           projection.translate(center());
           if (STYLE.parallels) {
             projection.parallels(STYLE.parallels);
           }
           PROJECTION_PATH = d3.geo.path().projection(projection);
 
-          // delete existing oceans, land, and markers
+          /**
+           * delete existing oceans, land, and markers
+           */
           d3.select('#'+ID+'-oceans').remove();
           d3.select('#'+ID+'-countries').remove();
           d3.select('#'+ID+'-markers').remove();
 
-          // draw the oceans
+          /**
+           * draw the oceans
+           */
           d3.select('#'+ID+'-map').append('g').attr('id', ID+'-oceans')
               .append('path')
                 .datum({type:'Sphere'})
@@ -751,7 +812,9 @@
                 .style('stroke-width', '1.5px')
             ;
 
-          // draw the countries
+          /**
+           * draw the countries
+           */
           d3.select('#'+ID+'-map').append('g').attr('id', ID+'-countries')
             .selectAll('path').data(cnt).enter().append('path')
               .attr('class', function(d, i) {
@@ -769,7 +832,9 @@
               .style('stroke-width', '0.5px')
             ;
 
-          // assign the click handlers if defined
+          /**
+           * assign the click handlers if defined
+           */
           if (COUNTRY_HANDLERS && COUNTRY_HANDLERS.length) {
             d3.select('#'+ID+'-countries').selectAll('path.country')
               .on('click', function country_onClick(country) {
@@ -783,10 +848,14 @@
             ;
           }
 
-          // get marker data
+          /**
+           * get marker data
+           */
           getMarkerData();
 
-          // add the map interaction handlers
+          /**
+           * add the map interaction handlers
+           */
           d3.select('#'+ID+'-map')
               .call(zoom)
               .call( d3.behavior.drag()
@@ -796,7 +865,9 @@
                )
             ;
 
-          // we're done processing, so start the rotation
+          /**
+           * we're done processing, so start the rotation
+           */
           rotationStart();
           fire('rendered', [projection]);
         }
@@ -816,7 +887,9 @@
      * @type     {boolean}
      */
     this.rotatable = function(value) {
-      // this is read-only
+      /**
+       * READ-ONLY
+       */
       return rotates();
     };
 
@@ -825,7 +898,9 @@
      * @type     {boolean}
      */
     this.rotating = function(value) {
-      // this is read-only
+      /**
+       * READ-ONLY
+       */
       return ( rotates() && ROTATE_3D && !ROTATE_STOPPED );
     };
 
@@ -870,7 +945,9 @@
      * @return   {void}
      */
     this.rotationPause = function(value) {
-      // this is a single-purpose function
+      /**
+       * this is a single-purpose function
+       */
       rotationPause();
     };
 
@@ -879,7 +956,9 @@
      * @return   {void}
      */
     this.rotationResume = function(value) {
-      // this is a single-purpose function
+      /**
+       * this is a single-purpose function
+       */
       rotationStart();
       fire('resumed');
     };
@@ -889,7 +968,9 @@
      * @return   {void}
      */
     this.rotationStop = function(value) {
-      // this is a single-purpose function
+      /**
+       * this is a single-purpose function
+       */
       ROTATE_STOPPED = true;
     };
 
@@ -910,7 +991,9 @@
      * @type     {string[]}
      */
     this.supportedTypes = function(value) {
-      // this is read-only
+      /**
+       * READ-ONLY
+       */
       var supported = [ ]
         , prop
         , proj = PROJECTIONS
@@ -963,7 +1046,9 @@
        * @return   {void}
        */
       function finalize() {
-        // set the projection
+        /**
+         * set the projection
+         */
         PROJECTION_PATH = path;
         STYLE = style;
         markerDraw();
@@ -1004,11 +1089,15 @@
 
       style = PROJECTIONS.map(style);
       if (style && style.projection) {
-        // make sure any duration passed is valid
+        /**
+         * make sure any duration passed is valid
+         */
         duration = isNaN(duration) ? 0 : Math.floor(duration);
         path = d3.geo.path().projection(style.projection.translate(center()));
 
-        // prepare the destination projection
+        /**
+         * prepare the destination projection
+         */
         switch (style.name) {
           case 'Globe':
           case 'Orthographic':
@@ -1021,16 +1110,24 @@
           style.projection.parallels(style.parallels);
         }
 
-        // stop any rotation
+        /**
+         * stop any rotation
+         */
         rotationTimerEnd();
 
-        // remove any markers
+        /**
+         * remove any markers
+         */
         markerDelete();
 
-        // rotate to 0, 0
+        /**
+         * rotate to 0, 0
+         */
         rotateToLocation([0, 0, 0]);
 
-        // set up the tween
+        /**
+         * set up the tween
+         */
         paths.transition()
             .duration(duration || 750)
             .attrTween('d', projectionTween(projection, projection = style.projection))
@@ -1054,8 +1151,10 @@
      * @param    {boolean} combined
      */
     this.travel = function(data, marker, duration, loop, combined) {
-      // if the map is rendered, execute the subroutine that draws routes
-      // otherwise, register the subroutine as a callback on the render event
+      /**
+       * if the map is rendered, execute the subroutine that draws routes
+       * otherwise, register the subroutine as a callback on the render event
+       */
       if (this.rendered()) {
         route(data, marker, duration, loop, combined);
       } else {
@@ -1086,15 +1185,21 @@
      * @param    {number[]} coord
      */
     function coordinateNormalize(coord) {
-       // longitude; range is ±180°
-       coord[0] = (Math.abs(coord[0]) > 180 ? -1 : 1) * (coord[0] % 180);
-       // latitude; range is ±90°
-       coord[1] = (Math.abs(coord[1]) >  90 ? -1 : 1) * (coord[1] % 90);
-       // axial tilt is between -90° and 270° so we handle it in steps
-       coord[2] = (coord[2] || 0);
-       coord[2] = (coord[2] > 270) ? coord[2]-360 : coord[2];
-       coord[2] = (coord[2] < -90) ? coord[2]+360 : coord[2];
-       return coord;
+      /**
+       * longitude; range is ±180°
+       */
+      coord[0] = (Math.abs(coord[0]) > 180 ? -1 : 1) * (coord[0] % 180);
+      /**
+       * latitude; range is ±90°
+       */
+      coord[1] = (Math.abs(coord[1]) >  90 ? -1 : 1) * (coord[1] % 90);
+      /**
+       * axial tilt is between -90° and 270° so we handle it in steps
+       */
+      coord[2] = (coord[2] || 0);
+      coord[2] = (coord[2] > 270) ? coord[2]-360 : coord[2];
+      coord[2] = (coord[2] < -90) ? coord[2]+360 : coord[2];
+      return coord;
     }
 
     /**
@@ -1132,10 +1237,14 @@
      * @return   {void}
      */
     function getMarkerData() {
-      // make sure we have everything we need before beginning
+      /**
+       * make sure we have everything we need before beginning
+       */
       if (d3.csv && d3.json && MARKER_FILE.name && MARKER_FILE.type && is_rendered()) {
         if ((/csv/i).test(MARKER_FILE.type)) {
-          // draw the markers
+          /**
+           * draw the markers
+           */
           d3.csv(MARKER_FILE.name, function(error, markers) {
             if (markers) {
               MARKER_DATA = markers;
@@ -1160,12 +1269,14 @@
      * @return   {number}
      */
     function getScale() {
-      // D3 projections are based on an svg that is 960x500. Since determining
-      // the scale is complicated and not well-documented, and it seems rather
-      // arbitrary, it's easier to just just adjust the scale based on the
-      // width of the svg used for the map. This approach will work with nearly
-      // all of the projections available in d3.geo - but some have buggy
-      // implementations in this area, so we'll drop those.
+      /**
+       * D3 projections are based on an svg that is 960x500. Since determining
+       * the scale is complicated and not well-documented, and it seems rather
+       * arbitrary, it's easier to just just adjust the scale based on the
+       * width of the svg used for the map. This approach will work with nearly
+       * all of the projections available in d3.geo - but some have buggy
+       * implementations in this area, so we'll drop those.
+       */
       var DEFAULT_WIDTH = 960
         , DEFAULT_SCALE = 150
         , modifier = WIDTH/DEFAULT_WIDTH
@@ -1188,23 +1299,23 @@
      * @return   {void}
      */
     function markerDraw() {
-      var columns = MARKER_DESCRIPTION              // column/object property
-        , container = DESCRIPTOR || CONTAINER       // contains the table
-        , data = MARKER_DATA                        // array containing data
-        , default_sort                              // column to default sort
-        , id_style = 'cjl-STable-style'             // id for the style element
-        , id_table = ID + '-markers-stable'         // unique table id
-        , ndx                                       // loop index
-        , rules = [ ]                               // stylesheet rules
-        , style = document.getElementById(id_style) // style element
-        , style_exists = false                      // flag indicating the style already existed
-        , table                                     // the table
-        , tbody                                     // the body of the table
-        , tcells                                    // cells in the table
-        , tfoot                                     // the table footer
-        , thead                                     // the header of the table
-        , trows                                     // rows in the table
-        , marker_lg                                 // the largest marker size
+      var columns = MARKER_DESCRIPTION              /* column/object property       */
+        , container = DESCRIPTOR || CONTAINER       /* contains the table           */
+        , data = MARKER_DATA                        /* array containing data        */
+        , default_sort                              /* column to default sort       */
+        , id_style = 'cjl-STable-style'             /* id for the style element     */
+        , id_table = ID + '-markers-stable'         /* unique table id              */
+        , ndx                                       /* loop index                   */
+        , rules = [ ]                               /* stylesheet rules             */
+        , style = document.getElementById(id_style) /* style element                */
+        , style_exists = false                      /* flag indicating style exists */
+        , table                                     /* the table                    */
+        , tbody                                     /* the body of the table        */
+        , tcells                                    /* cells in the table           */
+        , tfoot                                     /* the table footer             */
+        , thead                                     /* the header of the table      */
+        , trows                                     /* rows in the table            */
+        , marker_lg                                 /* the largest marker size      */
       ;
 
       /**
@@ -1215,9 +1326,11 @@
         d3.selectAll('path.marker')
             .transition()
               .duration(function(d) {
-                 // set the actual animation to 90% of the time
-                 // before setting the size-relative duration
-                 // and setting the duration to the minimum value
+                 /**
+                  * set the actual animation to 90% of the time
+                  * before setting the size-relative duration
+                  * and setting the duration to the minimum value
+                  */
                  var max_ms = Math.floor(MARKER_ANIMATION_DURATION * 0.9)
                    , rel_ms = Math.floor(d.marker.rel_size * max_ms)
                    , ms = Math.min(rel_ms, max_ms)
@@ -1238,9 +1351,11 @@
         d3.selectAll('path.marker')
             .transition()
               .duration(function(d) {
-                 // set the actual animation to .3 of 90% of the time
-                 // before setting the size-relative duration
-                 // and setting the duration to the minimum value
+                 /**
+                  * set the actual animation to .3 of 90% of the time
+                  * before setting the size-relative duration
+                  * and setting the duration to the minimum value
+                  */
                  var max_ms = Math.floor((MARKER_ANIMATION_DURATION * 0.9)/3)
                    , rel_ms = Math.floor(d.marker.rel_size * max_ms)
                    , ms = Math.min(rel_ms, max_ms)
@@ -1254,9 +1369,11 @@
                })
             .transition()
               .duration(function(d, i) {
-                 // set the actual animation to .6 of 90% of the time
-                 // before setting the size-relative duration
-                 // and setting the duration to the minimum value
+                 /**
+                  * set the actual animation to .6 of 90% of the time
+                  * before setting the size-relative duration
+                  * and setting the duration to the minimum value
+                  */
                  var max_ms = Math.floor((MARKER_ANIMATION_DURATION * 0.9)/3)*2
                    , rel_ms = Math.floor(d.marker.rel_size * max_ms)
                    , ms = Math.min(rel_ms, max_ms)
@@ -1269,18 +1386,26 @@
 
       marker_lg = d3.max(data, function(d) { return d.size || d.Size; });
 
-      // if the largest size isn't set, set it to the marker size
+      /**
+       * if the largest size isn't set, set it to the marker size
+       */
       marker_lg = marker_lg || MARKER_SIZE;
 
-      // if the map has not been rendered yet then call the render method,
-      // otherwise, go ahead and draw the markers
+      /**
+       * if the map has not been rendered yet then call the render method,
+       * otherwise, go ahead and draw the markers
+       */
       if (!is_rendered()) {
         self.render();
       } else {
-        // delete all the existing markers
+        /**
+         * delete all the existing markers
+         */
         markerDelete();
 
-        // add the markers using the data provided
+        /**
+         * add the markers using the data provided
+         */
         d3.select('#'+ID+'-map').append('g').attr('id', ID+'-markers')
            .selectAll('path').data(data).enter().append('path')
              .datum(function(d) {
@@ -1315,7 +1440,9 @@
              .style('stroke-opacity', (PALETTE.markerOpacity || 1))
           ;
 
-        // add some visual interest to the markers via animation
+        /**
+         * add some visual interest to the markers via animation
+         */
         switch (MARKER_ANIMATION) {
           case 'ping':
             setInterval(ping, MARKER_ANIMATION_DURATION);
@@ -1324,15 +1451,19 @@
             setInterval(pulse, MARKER_ANIMATION_DURATION);
             break;
           case 'none':
-            // markers are set at 1px when created, this sets them to the
-            // maximum radius because they never grow using animation
+            /**
+             * markers are set at 1px when created, this sets them to the
+             * maximum radius because they never grow using animation
+             */
             d3.selectAll('path.marker').style('stroke-width', function(d, i) {
                 return d.size || d.Size || MARKER_SIZE;
               });
             break;
         }
 
-        // assign the click handlers if defined
+        /**
+         * assign the click handlers if defined
+         */
         if (MARKER_HANDLERS && MARKER_HANDLERS.length) {
           d3.select('#'+ID+'-markers').selectAll('path.marker')
             .on('click', function marker_onClick(marker) {
@@ -1346,19 +1477,27 @@
           ;
         }
 
-        // add a data table if one does not exist and columns have been
-        // specified, using the same logic as cjl-scrollabletable
+        /**
+         * add a data table if one does not exist and columns have been
+         * specified, using the same logic as cjl-scrollabletable
+         */
         if (!MARKER_TABLE && columns && columns.length) {
-          // build the stylesheet
+          /**
+           * build the stylesheet
+           */
           if (!style) {
             style = document.createElement('style');
             style.setAttribute('id', id_style);
             style.setAttribute('type', 'text/css');
 
-            // write the sortable styles so we get the adjusted widths when we
-            // write the scrollable styles
+            /**
+             * write the sortable styles so we get the adjusted widths when we
+             * write the scrollable styles
+             */
             if (style) {
-              // style for a sortable table
+              /**
+               * style for a sortable table
+               */
               rules = [];
               rules.push('#'+id_table+' .sortable { cursor:pointer; padding:inherit 0.1em; }');
               rules.push('#'+id_table+' .sortable:after { border-bottom:0.3em solid #000; border-left:0.3em solid transparent; border-right:0.3em solid transparent; bottom:0.75em; content:""; height:0; margin-left:0.1em; position:relative; width:0; }');
@@ -1375,7 +1514,9 @@
             style_exists = true;
           }
 
-          // create the table
+          /**
+           * create the table
+           */
           table = d3.select(container).append('table')
                       .attr('class', 'scrollable marker-description')
                       .attr('id', id_table)
@@ -1384,7 +1525,9 @@
           tfoot = table.append('tfoot');
           tbody = table.append('tbody');
 
-          // append the header row
+          /**
+           * append the header row
+           */
           thead.append('tr')
                .selectAll('th')
                .data(columns)
@@ -1403,7 +1546,9 @@
                   })
             ;
 
-          // attach the click handler
+          /**
+           * attach the click handler
+           */
           thead.selectAll('th.sortable')
                  .on('click', function (d, i) {
                     var clicked = d3.select(this)
@@ -1412,18 +1557,22 @@
                       , desc = clicked.classed('desc')
                     ;
 
-                    // normalize the data
+                    /**
+                     * normalize the data
+                     */
                     d = d.name || d;
 
-                    // reset the 'sorted' class on siblings
+                    /**
+                     * reset the 'sorted' class on siblings
+                     */
                     sorted.classed('sorted', false);
 
                     if (desc) {
                       clicked.classed({'desc': false, 'sorted': true});
                       tbody.selectAll('tr').sort(function ascending(a, b) {
                           var ret = 0;
-                          a = a[d];  // select the property to compare
-                          b = b[d];  // select the property to compare
+                          a = a[d];  /* select the property to compare */
+                          b = b[d];  /* select the property to compare */
                           if (a !== null && a !== undefined) {
                             if (a.localeCompare && (isNaN(a) || isNaN(b))) {
                               ret = a.localeCompare(b);
@@ -1437,8 +1586,8 @@
                       clicked.classed({'desc': true, 'sorted': true});
                       tbody.selectAll('tr').sort(function descending(a, b) {
                           var ret = 0;
-                          a = a[d];  // select the property to compare
-                          b = b[d];  // select the property to compare
+                          a = a[d];  /* select the property to compare */
+                          b = b[d];  /* select the property to compare */
                           if (b !== null && b !== undefined) {
                             if (b.localeCompare && (isNaN(a) || isNaN(b))) {
                               ret = b.localeCompare(a);
@@ -1452,7 +1601,9 @@
                   })
             ;
 
-          // create the footer
+          /**
+           * create the footer
+           */
           tfoot.append('tr')
                .selectAll('td')
                .data(columns)
@@ -1464,14 +1615,18 @@
                  .html('&nbsp;')
             ;
 
-          // create a row for each object in the markers
+          /**
+           * create a row for each object in the markers
+           */
           trows = tbody.selectAll('tr')
                        .data(data)
                        .enter()
                        .append('tr')
             ;
 
-          // create a cell in each row for each column
+          /**
+           * create a cell in each row for each column
+           */
           tcells = trows.selectAll('td')
                         .data(function(row) {
                            return columns.map(function(column) {
@@ -1485,9 +1640,13 @@
                           .html(function(d) { return d.value; })
             ;
 
-          // build the stylesheet
+          /**
+           * build the stylesheet
+           */
           if (!style_exists && style) {
-            // style for a scrollable table
+            /**
+             * style for a scrollable table
+             */
             rules.push('#'+id_table+'.scrollable { display:inline-block; padding:0 0.5em 1.5em 0; }');
             rules.push('#'+id_table+'.scrollable tbody { height:12em; overflow-y:scroll; }');
             rules.push('#'+id_table+'.scrollable tbody > tr { height:1.2em; margin:0; padding:0; }');
@@ -1498,7 +1657,10 @@
 
             tcells = document.getElementById(id_table).getElementsByTagName('tr').item(0).childNodes;
             for (ndx = 0; ndx < tcells.length; ndx += 1) {
-              rules.push('#'+id_table+' th:nth-of-type('+(ndx+1)+'), #'+id_table+' td:nth-of-type('+(ndx+1)+') { width:'+(tcells.item(ndx).offsetWidth+15)+'px; }'); // add 15 pixels to accommodate sort markers
+              /**
+               * add 15 pixels to accommodate sort markers
+               */
+              rules.push('#'+id_table+' th:nth-of-type('+(ndx+1)+'), #'+id_table+' td:nth-of-type('+(ndx+1)+') { width:'+(tcells.item(ndx).offsetWidth+15)+'px; }');
             }
 
             style.innerHTML = rules.join('\n');
@@ -1509,7 +1671,9 @@
             document.body.appendChild(style);
           }
 
-          // sort the table on the first sortable column by default
+          /**
+           * sort the table on the first sortable column by default
+           */
           ndx = columns.length;
           while (ndx -= 1 > -1) {
             if (columns[ndx].sortable !== false && columns[ndx].sort) {
@@ -1530,7 +1694,9 @@
      * @return   {boolean}
      */
     function is_rendered() {
-      // this is read-only
+      /**
+       * READ-ONLY
+       */
       var node = document.getElementById(ID+'-countries');
       return node ? true : false;
     }
@@ -1540,7 +1706,9 @@
      * @return   {boolean}
      */
     function rotates() {
-      // the map can rotate - i.e. it's a globe
+      /**
+       * the map can rotate - i.e. it's a globe
+       */
       return STYLE.rotates === true;
     }
 
@@ -1573,8 +1741,10 @@
      * @return   {void}
      */
     function rotationStart() {
-      // update the ticker to reduce janky-ness and
-      // reset the stopped and paused flags
+      /**
+       * update the ticker to reduce janky-ness and
+       * reset the stopped and paused flags
+       */
       THEN = Date.now();
       ROTATE_3D = true;
       ROTATE_STOPPED = false;
@@ -1585,7 +1755,9 @@
      * @return   {void}
      */
     function rotationTimerEnd() {
-      // a D3 timer cannot be cleared once started
+      /**
+       * a D3 timer cannot be cleared once started
+       */
       ROTATE_STOPPED = true;
       ROTATE_3D = false;
     }
@@ -1597,9 +1769,13 @@
      */
     function rotationTimerStart(projection) {
       if (projection) {
-        // start the rotation timer
+        /**
+         * start the rotation timer
+         */
         d3.timer(function spin() {
-            // if the map can rotate and has not been stopped and is not paused
+            /**
+             * if the map can rotate and has not been stopped and is not paused
+             */
             if (rotates() && !ROTATE_STOPPED && ROTATE_3D) {
               var tick = (Date.now()-THEN)
                 , angle = VELOCITY * tick
@@ -1625,12 +1801,16 @@
     function route(data, marker, duration, loop, combined) {
       var routes;
 
-      // normalize the animation parameters
+      /**
+       * normalize the animation parameters
+       */
       marker = marker && marker.d ? marker : null;
       duration = isNaN(duration) ? 1000 : Math.floor(duration);
       loop = (loop === true);
 
-      // subscribe the handler to the creation event
+      /**
+       * subscribe the handler to the creation event
+       */
       EVENT_HANDLERS['routes-created'] = [function() {
         d3.select('#'+ID+'-map').selectAll('g.route')
                    .each(function() {
@@ -1638,28 +1818,38 @@
                     });
       }];
 
-      // determine what sort of 'data' was passed in
+      /**
+       * determine what sort of 'data' was passed in
+       */
       if (typeof data === 'object' && data.name) {
-        // if 'data' is an object with 'name' - i.e., a resource
+        /**
+         * if 'data' is an object with 'name' - i.e., a resource
+         */
         if (data.type && (/csv/i).test(data.type)) {
           d3.csv(data.name, routeCreate);
         } else {
           d3.json(data.name, routeCreate);
         }
       } else if (data instanceof Array) {
-        // data is an array so pass the data directly into the subroutine
+        /**
+         * data is an array so pass the data directly into the subroutine
+         */
         routeCreate(null, data);
       } else if (typeof data === 'string' || typeof data === 'number') {
-        // this will convert the string into a valid URL
-        // if the string passed in is not a valid URI, e.g., [-73,88]
-        // the string will be appended to the current (DOM) location,
-        // e.g., http://js.cathmhaol.com/[-73,88]
+        /**
+         * this will convert the string into a valid URL
+         * if the string passed in is not a valid URI, e.g., [-73,88]
+         * the string will be appended to the current (DOM) location,
+         * e.g., http://js.cathmhaol.com/[-73,88]
+         */
         resource = document.createElement('a');
         resource.href = data;
 
-        // check to see if the resource being requested is on the
-        // same domain and if so, just use the pathname in the request
-        // if it's not, then use the full href
+        /**
+         * check to see if the resource being requested is on the
+         * same domain and if so, just use the pathname in the request
+         * if it's not, then use the full href
+         */
         if (resource.hostname === document.location.hostname) {
           resource = resource.pathname;
         } else {
@@ -1712,7 +1902,9 @@
 
       group = d3.select(typeof group === 'string' ? group : group);
 
-      // make sure we have a group element
+      /**
+       * make sure we have a group element
+       */
       if (group && group.node().nodeType === 1 && group.node().nodeName.toLowerCase() === 'g') {
         routes = group.selectAll('path');
         count = routes.size();
@@ -1847,18 +2039,24 @@
       if (error) {
         return;
       } else if (data && projection) {
-        // for each route in the data
+        /**
+         * for each route in the data
+         */
         for (counter = 0; counter < data.length; counter += 1) {
           origin = data[counter].origin;
           destinations = data[counter].destination;
 
-          // normalize the origin
+          /**
+           * normalize the origin
+           */
           if (origin && origin.length !== 2) {
             origin = null;
           }
 
-          // normalize the destination property as an array
-          // of waypoints
+          /**
+           * normalize the destination property as an array
+           * of waypoints
+           */
           if (destinations && !(destinations[0] instanceof Array)) {
             destinations = [destinations];
           }
@@ -1866,14 +2064,16 @@
             destinations = null;
           }
 
-          // if we have an origin and at least one waypoint
+          /**
+           * if we have an origin and at least one waypoint
+           */
           if (origin && destinations) {
             routes = routes || map.append('g').attr('id', ID + '-routes');
-            // create the route group
+            /* create the route group */
             group = routes.append('g')
                    .attr('class', 'route')
               ;
-            // add the paths to the route
+            /* add the paths to the route */
             origin = projection(origin).join(' ')
             for (n = 0; n < destinations.length; n += 1) {
               waypoint = projection(destinations[n]).join(' ')
@@ -1889,7 +2089,9 @@
       }
     }
 
-    // CONSTRUCTOR
+    /**
+     * CONSTRUCTOR
+     */
     try {
       var COUNTRY_HANDLERS = [ ]
         , D3COLORS = d3.scale.category10()
@@ -1931,15 +2133,23 @@
           }
         , PROJECTION_PATH
         , PROJECTIONS = {
-            // map to property
+            /**
+             * map to property
+             */
             map: function(name) {
               var prop;
-              // added '2D' handling for backward compatibility
+              /**
+               * added '2D' handling for backward compatibility
+               */
               name = (name === '2D') ? 'equirectangular' : (name || '');
-              // normalize the name
+              /**
+               * normalize the name
+               */
               name = name.replace(/\([^\)]+\)/g, '');
               name = name.replace(/[^\w]/g, '').toLowerCase();
-              // search for the requested projection
+              /**
+               * search for the requested projection
+               */
               for (prop in this) {
                 if (this.hasOwnProperty(prop)) {
                   if (prop === name) {
@@ -1956,7 +2166,9 @@
         , self = this
       ;
 
-      // add projections that are supported in d3.geo
+      /**
+       * add projections that are supported in d3.geo
+       */
       if (d3.geo.aitoff) {
         PROJECTIONS.aitoff = {
               name:'Aitoff',
@@ -2209,38 +2421,54 @@
             };
       }
 
-      // set the map style
+      /**
+       * set the map style
+       */
       STYLE = PROJECTIONS.map(STYLE || 'globe');
 
-      // check to make sure we have at least one projection available,
-      // otherwise we can't do anything
+      /**
+       * check to make sure we have at least one projection available,
+       * otherwise we can't do anything
+       */
       if (STYLE.projection) {
-        // make sure the polyfill for the Date.now method is present
+        /**
+         * make sure the polyfill for the Date.now method is present
+         */
         if (!Date.now) {
           Date.now = function now() {
             return (new Date()).getTime();
           };
         }
 
-        // add a 'size' method for d3 selections
+        /**
+         * add a 'size' method for d3 selections
+         */
         d3.selection.prototype.size = function() {
             var n = 0;
             this.each(function() { n += 1; });
             return n;
           };
 
-        // subscribe the markerDraw function to the 'marker-data' event
+        /**
+         * subscribe the markerDraw function to the 'marker-data' event
+         */
         EVENT_HANDLERS['marker-data'] = [markerDraw];
 
-        // set the container element
+        /**
+         * set the container element
+         */
         if (typeof CONTAINER === 'string') {
           CONTAINER = document.getElementById(CONTAINER);
         }
 
-        // set the width
+        /**
+         * set the width
+         */
         WIDTH = (WIDTH || (CONTAINER && CONTAINER.nodeType === 1) ? CONTAINER.clientWidth : 160);
 
-        // set the table descriptor element
+        /**
+         * set the table descriptor element
+         */
         if (typeof DESCRIPTOR === 'string') {
           DESCRIPTOR = document.getElementById(DESCRIPTOR);
         }
@@ -2248,7 +2476,9 @@
           DESCRIPTOR = null;
         }
 
-        // default the containing element
+        /**
+         * default the containing element
+         */
         if (!CONTAINER || CONTAINER.nodeType !== 1) {
           CONTAINER = document.body;
         }
@@ -2265,4 +2495,4 @@
   };
 
   return this;
-}))();
+}));

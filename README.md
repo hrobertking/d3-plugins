@@ -10,50 +10,52 @@ Each library is documented, and none are minified. If you want a minified versio
 ## Plug-ins in the collection
 
 ### *earth*
-Adds a marked map data visualization.
+Adds a marked map data visualization. The visualization has two clickable objects: `country` and `marker`, both of which can be referenced as `this` within the click handler. Each `country` has the properties `id` (the id from the topoJSON file), `iso` (the ISO 3166 Alpha-2 code for the country), and `name` (the name of the country in English). Each `marker` placed has a `longitude`, `latitude`, and `size` (in pixels).
 
 #### Syntax:
 *object* d3.geo.earth(*string* container[, *number* width[, *string* style[, *string|HTMLElement* descriptor]]])
 
-- ***void* *object*.addOnCountryClick(*function* handler)**: Adds a click handler to the <em>countries</em>. The parameter <em>handler</em> is the handler is a JavaScript function executed when a country on the map is clicked. The 'this' keyword in the handler function will refer to the country clicked. The properties 'id', which is the id from the topoJSON file, 'iso', which is the ISO 3166 Alpha-2 code for the country, and 'name', which is the name of the country in English are among the properties available through the 'this' object.
-- ***void* *object*.addOnMarkerClick(*function* handler)**: Adds a click handler to the <em>markers</em>. The parameter <em>handler</em> is the handler is a JavaScript function executed when a marker on the map is clicked. The 'this' keyword in the handler function will refer to the marker clicked.
-- ***string* *object*.borderColor([*string* color])**: Sets (if `color` is passed) and returns the hexadecimal value used when drawing borders. Default is '#ff0000'.
-- ***HTMLElement* *object*.element()**: Returns the element that contains the SVG.
-- ***string[]* *object*.events()**: Returns an array containing event names.
-- ***string* *object*.id()**: Returns the id attribute of the SVG used to display the map.
-- ***string* *object*.markerAnimation([*string* type])**: Sets (if `type` is passed) and returns the animation type. Valid values are one of 'pulse', 'ping', or 'none'. Default is 'pulse'.
-- ***number* *object*.markerAnimationDuration([*number* ms])**: Sets (if `ms` is passed) and returns the animation duration, in milliseconds. Valid values are greater than 100. Default is 1500.
-- ***string* *object*.markerColor([*string* color])**: Sets (if `color` is passed) and returns the color of the marker, in hexadecimal format. Default is '#ff0000'.
-- ***string[]* *object*.markerDescriptionData(*string[]* headers)**: Sets (if `headers` is passed) and returns the column headers of the marker description table. Note: column headers must match the data returned in the marker file.
-- ***object* *object*.markerFile([*string*|*object* file[, *string* type]])**: Sets the URI and type of the marker data. Data passed in may either be a string URI, e.g., '/airports/sorties.csv', or an object, e.g., { name:'/airports/sorties.csv', type:'csv' }
-- ***object* *object*.markerOpacity([*float* opacity])**: Sets (if `opacity` is passed) and returns the opacity of the marker. Valid values are between 0.0 (transparent) and 1.0 (opaque).
-- ***integer* *object*.markerSize([*integer* px])**: Sets (if `px` is passed) and returns the size of the marker in pixels. Default is 3.
-- ***void* *object*.on(*string* event, *function* handler)**: Sets an event handler for a named event.
-- ***object* *object*.palette([*object* palette])**: Sets (if `palette` is passed) and returns the palette used in drawing the map. The palette should contain values for `border`, `countries`, `marker`, and `ocean`. For example, <span class="code">{ border:'#333333', marker:'#663399' }</span> will set the border color and marker colors while using the default country colors, whereas <span class="code">{ border:'#333333', countries:['#ff0000', '#ff3333', '#ff6666', '#ff9999', '#ffcccc', '#ffffff'] }</span> will set the border color as well as the colors used to draw countries.
-- ***void* *object*.parseMarkerData(*string*|*HTMLElement* table)**: Uses marker data presented in the table element specified in `table`. Data passed into the method may either be the value of the element id attribute or the table element.
-- ***void* *object*.refreshMarkerData(*string*|*number* interval)**: Sets the interval (in seconds) at which the marker data is refreshed using the `markerFile` information.
-- ***void* *object*.render([*string* style])**: Renders the map using the specified style.
-- ***boolean* *object*.rendered()**: Returns true if the SVG map is rendered, false if not.
-- ***boolean* *object*.rotatable()**: Returns true if the map is rotatable, i.e., if it is a globe.
-- ***boolean* *object*.rotating()**: Returns true if the map is rotating, i.e., if it is `rotatable` and the animation is set to run.
-- ***void* *object*.rotationDecrease()**: Decreases the rotational speed of the map.
-- ***void* *object*.rotationIncrease()**: Increases the rotational speed of the map.
-- ***void* *object*.rotationPause()**: Stops the rotation.
-- ***void* *object*.rotationResume()**: Resumes the rotation.
-- ***void* *object*.rotationStop()**: Stops the rotation. Rotation that is 'stopped' is waiting for an explicit restart using `rotationResume`.
-- ***string* *object*.style([*string* style])**: Sets (if `style` is passed) and returns the style used when rendering the map.
-- ***string[]* *object*.supportedTypes()**: Returns an array of all supported styles.
-- ***string* *object*.topoFile([*string* URI])**: Sets (if `URI` is passed) and returns the URI of the topoJSON file used.
-- ***object* *object*.topoJSON([*object* topoJSON])**: Sets (if `topoJSON` is passed) and returns the topoJSON object used.
-- ***void* *object*.transition(*string* style[, *integer* duration])**: Animates the transition from the current map style to the map style provided. Animation runs for the specified duration (in milliseconds). Default duration is 750ms.
-- ***void* *object*.travel(*string*|*object*|*object[]* data, *object* marker, *number* duration, *boolean* loop, *boolean* combined)**: Animates travel along routes defined in the specified data - identified by a resource object (i.e., a URL string or an object with 'name' and type' properties) or an array of objects with 'origin' and 'destination' properties - using the specified marker. The animation runs for the specified duration (in milliseconds) or 1000ms.
-
+- ***void* *instance*.addOnCountryClick(*function* handler)**: Adds a click handler to the <em>countries</em>. The parameter <em>handler</em> is the handler is a JavaScript function executed when a country on the map is clicked. The 'this' keyword in the handler function will refer to the country clicked. The properties 'id', which is the id from the topoJSON file, 'iso', which is the ISO 3166 Alpha-2 code for the country, and 'name', which is the name of the country in English are among the properties available through the 'this' object.
+- ***void* *instance*.addOnMarkerClick(*function* handler)**: Adds a click handler to the <em>markers</em>. The parameter <em>handler</em> is the handler is a JavaScript function executed when a marker on the map is clicked. The 'this' keyword in the handler function will refer to the marker clicked.
+- ***string* *instance*.borderColor([*string* color])**: Sets (if `color` is passed) and returns the hexadecimal value used when drawing borders. Default is '#ff0000'.
+- ***HTMLElement* *instance*.element()**: Returns the element that contains the SVG.
+- ***string[]* *instance*.events()**: Returns an array containing event names.
+- ***string* *instance*.id()**: Returns the id attribute of the SVG used to display the map.
+- ***string* *instance*.markerAnimation([*string* type])**: Sets (if `type` is passed) and returns the animation type. Valid values are one of 'pulse', 'ping', or 'none'. Default is 'pulse'.
+- ***number* *instance*.markerAnimationDuration([*number* ms])**: Sets (if `ms` is passed) and returns the animation duration, in milliseconds. Valid values are greater than 100. Default is 1500.
+- ***string* *instance*.markerColor([*string* color])**: Sets (if `color` is passed) and returns the color of the marker, in hexadecimal format. Default is '#ff0000'.
+- ***string[]* *instance*.markerDescriptionData(*string[]* headers)**: Sets (if `headers` is passed) and returns the column headers of the marker description table. Note: column headers must match the data returned in the marker file.
+- ***object* *instance*.markerFile([*string*|*object* file[, *string* type]])**: Sets the URI and type of the marker data. Data passed in may either be a string URI, e.g., '/airports/sorties.csv', or an object, e.g., { name:'/airports/sorties.csv', type:'csv' }
+- ***object* *instance*.markerOpacity([*float* opacity])**: Sets (if `opacity` is passed) and returns the opacity of the marker. Valid values are between 0.0 (transparent) and 1.0 (opaque).
+- ***integer* *instance*.markerSize([*integer* px])**: Sets (if `px` is passed) and returns the size of the marker in pixels. Default is 3.
+- ***void* *instance*.on(*string* event, *function* handler)**: Sets an event handler for a named event.
+- ***object* *instance*.palette([*object* palette])**: Sets (if `palette` is passed) and returns the palette used in drawing the map. The palette should contain values for `border`, `countries`, `marker`, and `ocean`. For example, <span class="code">{ border:'#333333', marker:'#663399' }</span> will set the border color and marker colors while using the default country colors, whereas <span class="code">{ border:'#333333', countries:['#ff0000', '#ff3333', '#ff6666', '#ff9999', '#ffcccc', '#ffffff'] }</span> will set the border color as well as the colors used to draw countries.
+- ***void* *instance*.parseMarkerData(*string*|*HTMLElement* table)**: Uses marker data presented in the table element specified in `table`. Data passed into the method may either be the value of the element id attribute or the table element.
+- ***void* *instance*.refreshMarkerData(*string*|*number* interval)**: Sets the interval (in seconds) at which the marker data is refreshed using the `markerFile` information.
+- ***void* *instance*.render([*string* style])**: Renders the map using the specified style.
+- ***boolean* *instance*.rendered()**: Returns true if the SVG map is rendered, false if not.
+- ***boolean* *instance*.rotatable()**: Returns true if the map is rotatable, i.e., if it is a globe.
+- ***boolean* *instance*.rotating()**: Returns true if the map is rotating, i.e., if it is `rotatable` and the animation is set to run.
+- ***void* *instance*.rotationDecrease()**: Decreases the rotational speed of the map.
+- ***void* *instance*.rotationIncrease()**: Increases the rotational speed of the map.
+- ***void* *instance*.rotationPause()**: Stops the rotation.
+- ***void* *instance*.rotationResume()**: Resumes the rotation.
+- ***void* *instance*.rotationStop()**: Stops the rotation. Rotation that is 'stopped' is waiting for an explicit restart using `rotationResume`.
+- ***string* *instance*.style([*string* style])**: Sets (if `style` is passed) and returns the style used when rendering the map.
+- ***string[]* *instance*.supportedTypes()**: Returns an array of all supported styles.
+- ***string* *instance*.topoFile([*string* URI])**: Sets (if `URI` is passed) and returns the URI of the topoJSON file used.
+- ***object* *instance*.topoJSON([*object* topoJSON])**: Sets (if `topoJSON` is passed) and returns the topoJSON object used.
+- ***void* *instance*.transition(*string* style[, *integer* duration])**: Animates the transition from the current map style to the map style provided. Animation runs for the specified duration (in milliseconds). Default duration is 750ms.
+- ***void* *instance*.travel(*string*|*object*|*object[]* data, *object* marker, *number* duration, *boolean* loop, *boolean* combined)**: Animates travel along routes defined in the specified data - identified by a resource object (i.e., a URL string or an object with 'name' and type' properties) or an array of objects with 'origin' and 'destination' properties - using the specified marker. The animation runs for the specified duration (in milliseconds) or 1000ms.
 
 #### Requires:
 - d3 --- http://d3js.org/d3.v3.min.js
 - d3 geo projections --- http://d3js.org/d3.geo.projection.v0.min.js
 - d3 topojson --- http://d3js.org/topojson.v1.min.js
 - a topoJSON data file
+
+#### Demo:
+- [The Cathmhaol](http://prototypes.cathmhaol.com/earth/)
 
 
 ### *jquery*
@@ -110,4 +112,4 @@ Examples:
 - d3 --- http://d3js.org/d3.v3.min.js
 
 #### Demo:
-- [The Cathmhaol](http://products.cathmhaol.com/prototypes/d3-table/)
+- [The Cathmhaol](http://prototypes.cathmhaol.com/d3-table/)
