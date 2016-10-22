@@ -81,6 +81,11 @@
       value = getElement(value);
       if (value) {
         CONTAINER = value;
+        /**
+         * set the width to the new container
+         */
+        WIDTH = (WIDTH || (CONTAINER && CONTAINER.nodeType === 1) ? CONTAINER.clientWidth : 160);
+
       }
       return CONTAINER;
     };
@@ -2457,14 +2462,7 @@
         /**
          * set the container element
          */
-        if (typeof CONTAINER === 'string') {
-          CONTAINER = document.getElementById(CONTAINER);
-        }
-
-        /**
-         * set the width
-         */
-        WIDTH = (WIDTH || (CONTAINER && CONTAINER.nodeType === 1) ? CONTAINER.clientWidth : 160);
+        this.element(CONTAINER || document.body);
 
         /**
          * set the table descriptor element
@@ -2474,13 +2472,6 @@
         }
         if (DESCRIPTOR && DESCRIPTOR.nodeType !== 1) {
           DESCRIPTOR = null;
-        }
-
-        /**
-         * default the containing element
-         */
-        if (!CONTAINER || CONTAINER.nodeType !== 1) {
-          CONTAINER = document.body;
         }
 
         this.on('rendered', rotationTimerStart);
