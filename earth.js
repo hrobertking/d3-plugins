@@ -75,17 +75,83 @@
      * @type     {HTMLElement}
      */
     this.element = function(value) {
+      var is_table = false;
+
       /**
        * if a string is passed, try to get an element with that id
        */
       value = getElement(value);
       if (value) {
-        CONTAINER = value;
+        /**
+         * If the element is a table, use the table as marker data and
+         * create a container for the visualization
+         */
+        if (CONTAINER.nodeName === 'TABLE') {
+          is_table = true;
+
+          /**
+           * Set the table descriptor
+           */
+          DESCRIPTOR = CONTAINER;
+
+          /**
+           * Set the visualization container
+           */
+          CONTAINER = document.createElement('div');
+          CONTAINER.id = 'map-' + ID + '-container';
+
+          /**
+           * Hide the table descriptor
+           */
+          DESCRIPTOR.style.backgroundColor = '#fff';
+          DESCRIPTOR.style.cursor = 'pointer';
+          DESCRIPTOR.style.position = 'absolute';
+          DESCRIPTOR.style.zIndex = 1000;
+          DESCRIPTOR.style.clip = 'rect(0, 0, 0, 0)';
+
+          /**
+           * Toggle the descriptor table and pause/resume rotation
+           */
+          function descriptorToggle() {
+            var isClipped = !(/auto/).test(DESCRIPTOR.style.clip);
+            DESCRIPTOR.style.clip = isClipped ? 'auto' : 'rect(0, 0, 0, 0)';
+            if (isClipped) {
+              rotationPause();
+            } else {
+              rotationResume();
+            }
+          }
+
+          /**
+           * Add click handlers for the descriptor table
+          */
+          if (CONTAINER.attachEvent) {
+            CONTAINER.attachEvent('onclick', descriptorToggle);
+            DESCRIPTOR.attachEvent('onclick', descriptorToggle);
+          } else {
+            CONTAINER.addEventListener('click', descriptorToggle);
+            DESCRIPTOR.addEventListener('click', descriptorToggle);
+          }
+
+          /**
+           * Add the visualization to the document
+           */
+          DESCRIPTOR.parentNode.insertBefore(CONTAINER, DESCRIPTOR.nextSibling);
+        } else {
+          CONTAINER = value;
+        }
+
         /**
          * set the width to the new container
          */
         WIDTH = (WIDTH || (CONTAINER && CONTAINER.nodeType === 1) ? CONTAINER.clientWidth : 160);
 
+        /**
+         * parse the element if it's marker data
+         */
+        if (is_table) {
+          SELF.parseMarkerData(DESCRIPTOR);
+        }
       }
       return CONTAINER;
     };
@@ -337,7 +403,7 @@
          */
         table = getElement(table);
         if (table && table.nodeName.toLowerCase() === 'table') {
-          DESCRIPTOR = table.parentNode;
+          DESCRIPTOR = DESCRIPTOR || table.parentNode;
           MARKER_DATA = [ ];
 
           /**
@@ -1401,7 +1467,7 @@
        * otherwise, go ahead and draw the markers
        */
       if (!is_rendered()) {
-        self.render();
+        SELF.render();
       } else {
         /**
          * delete all the existing markers
@@ -2168,7 +2234,7 @@
         , ROTATE_STOPPED = false
         , THEN
         , VELOCITY = 0.05
-        , self = this
+        , SELF = this
       ;
 
       /**
@@ -2427,6 +2493,12 @@
       }
 
       /**
+       * subscribe the handlers to the primary events
+       */
+      EVENT_HANDLERS['marker-data'] = [markerDraw];
+      EVENT_HANDLERS['rendered'] = [rotationTimerStart];
+
+      /**
        * set the map style
        */
       STYLE = PROJECTIONS.map(STYLE || 'globe');
@@ -2455,11 +2527,6 @@
           };
 
         /**
-         * subscribe the markerDraw function to the 'marker-data' event
-         */
-        EVENT_HANDLERS['marker-data'] = [markerDraw];
-
-        /**
          * set the container element
          */
         this.element(CONTAINER || document.body);
@@ -2473,8 +2540,6 @@
         if (DESCRIPTOR && DESCRIPTOR.nodeType !== 1) {
           DESCRIPTOR = null;
         }
-
-        this.on('rendered', rotationTimerStart);
 
         return this;
       } else {
