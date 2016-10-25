@@ -2198,80 +2198,90 @@
     /**
      * CONSTRUCTOR
      */
-    try {
-      var COUNTRY_HANDLERS = [ ]
-        , D3COLORS = d3.scale.category10()
-        , DRAGGING = false
-        , EVENT_HANDLERS = { }
-        , EVENTS = [ 'accelerated'
-                   , 'paused'
-                   , 'rendered'
-                   , 'resumed'
-                   , 'slowed'
-                   ]
-        , ID = 'cjl-globe-'+Math.random().toString().replace(/\./, '')
-        , LOCATION = [0, 0, 0]
-        , MARKER_ANIMATION = 'pulse'
-        , MARKER_ANIMATION_DURATION = 1500
-        , MARKER_DATA = []
-        , MARKER_DESCRIPTION
-        , MARKER_FILE = {}
-        , MARKER_HANDLERS = [ ]
-        , MARKER_RELATIVE_SIZE = false
-        , MARKER_SIZE = 3
-        , MARKER_TABLE = false
-        , PALETTE = {
-            border: '#766951',
-            countries: [ D3COLORS(1)
-                       , D3COLORS(2)
-                       , D3COLORS(3)
-                       , D3COLORS(4)
-                       , D3COLORS(5)
-                       , D3COLORS(6)
-                       , D3COLORS(7)
-                       , D3COLORS(8)
-                       , D3COLORS(9)
-                       , D3COLORS(10)
-            ],
-            marker: '#000000',
-            markerOpacity: '0.7',
-            ocean: '#d8ffff'
-          }
-        , POPUP_DESCRIPTOR = true
-        , PROJECTION_PATH
-        , PROJECTIONS = {
+    var COUNTRY_HANDLERS = [ ]
+      , D3COLORS
+      , DRAGGING = false
+      , EVENT_HANDLERS = { }
+      , EVENTS = [ 'accelerated'
+                 , 'paused'
+                 , 'rendered'
+                 , 'resumed'
+                 , 'slowed'
+                 ]
+      , ID = 'cjl-globe-'+Math.random().toString().replace(/\./, '')
+      , LOCATION = [0, 0, 0]
+      , MARKER_ANIMATION = 'pulse'
+      , MARKER_ANIMATION_DURATION = 1500
+      , MARKER_DATA = []
+      , MARKER_DESCRIPTION
+      , MARKER_FILE = {}
+      , MARKER_HANDLERS = [ ]
+      , MARKER_RELATIVE_SIZE = false
+      , MARKER_SIZE = 3
+      , MARKER_TABLE = false
+      , PALETTE = {
+          border: '#766951',
+          countries: [ ],
+          marker: '#000000',
+          markerOpacity: '0.7',
+          ocean: '#d8ffff'
+        }
+      , POPUP_DESCRIPTOR = true
+      , PROJECTION_PATH
+      , PROJECTIONS = {
+          /**
+           * map to property
+           */
+          map: function(name) {
+            var prop;
             /**
-             * map to property
+             * added '2D' handling for backward compatibility
              */
-            map: function(name) {
-              var prop;
-              /**
-               * added '2D' handling for backward compatibility
-               */
-              name = (name === '2D') ? 'equirectangular' : (name || '');
-              /**
-               * normalize the name
-               */
-              name = name.replace(/\([^\)]+\)/g, '');
-              name = name.replace(/[^\w]/g, '').toLowerCase();
-              /**
-               * search for the requested projection
-               */
-              for (prop in this) {
-                if (this.hasOwnProperty(prop)) {
-                  if (prop === name) {
-                    return this[prop];
-                  }
+            name = (name === '2D') ? 'equirectangular' : (name || '');
+            /**
+             * normalize the name
+             */
+            name = name.replace(/\([^\)]+\)/g, '');
+            name = name.replace(/[^\w]/g, '').toLowerCase();
+            /**
+             * search for the requested projection
+             */
+            for (prop in this) {
+              if (this.hasOwnProperty(prop)) {
+                if (prop === name) {
+                  return this[prop];
                 }
               }
             }
           }
-        , ROTATE_3D = false
-        , ROTATE_STOPPED = false
-        , THEN
-        , VELOCITY = 0.05
-        , SELF = this
-      ;
+        }
+      , ROTATE_3D = false
+      , ROTATE_STOPPED = false
+      , THEN
+      , VELOCITY = 0.05
+      , SELF = this
+    ;
+
+    /**
+     * make sure the polyfill for the Date.now method is present
+     */
+    if (!Date.now) {
+      Date.prototype.now = function now() {
+        return (new Date()).getTime();
+      };
+    }
+
+    try {
+      /**
+       * initialize the D3js projection-related variables
+       */
+      D3COLORS = d3.scale.category10();
+      PALETTE.countries = [ D3COLORS(1), D3COLORS(2)
+                          , D3COLORS(3), D3COLORS(4)
+                          , D3COLORS(5), D3COLORS(6)
+                          , D3COLORS(7), D3COLORS(8)
+                          , D3COLORS(9), D3COLORS(10)
+                          ];
 
       /**
        * add projections that are supported in d3.geo
@@ -2544,15 +2554,6 @@
        * otherwise we can't do anything
        */
       if (STYLE.projection) {
-        /**
-         * make sure the polyfill for the Date.now method is present
-         */
-        if (!Date.now) {
-          Date.prototype.now = function now() {
-            return (new Date()).getTime();
-          };
-        }
-
         /**
          * add a 'size' method for d3 selections
          */
