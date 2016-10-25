@@ -96,7 +96,13 @@
        * if a string is passed, try to get an element with that id
        */
       value = getElement(value);
+
       if (value) {
+        /**
+         * Set the object ID if we need to
+         */
+        CONTAINER.setAttribute('id', (CONTAINER.id || 'viz-' + ID + '-container'));
+
         /**
          * If the element is a table, use the table as marker data and
          * create a container for the visualization
@@ -113,7 +119,7 @@
            * Set the visualization container
            */
           CONTAINER = document.createElement('div');
-          CONTAINER.id = 'map-' + ID + '-container';
+          CONTAINER.id = DESCRIPTOR.getAttribute('id');
 
           /**
            * Hide the table descriptor
@@ -171,6 +177,11 @@
         }
 
         /**
+         * Set the vizualization ID
+         */
+        ID = CONTAINER.getAttribute('id');
+
+        /**
          * set the width to the new container
          */
         WIDTH = (WIDTH || (CONTAINER && CONTAINER.nodeType === 1) ? CONTAINER.clientWidth : 160);
@@ -179,6 +190,7 @@
          * parse the element if it's marker data
          */
         if (is_table) {
+          ID = ID.replace(/\-container$/, '');
           SELF.parseMarkerData(DESCRIPTOR);
         }
       }
@@ -528,7 +540,7 @@
                                        , LOCATION[2] || 0 ]);
 
         projection.rotate(LOCATION);
-        d3.select('#'+ID).selectAll('path')
+        d3.select('#viz-' + ID + '-svg').selectAll('path')
                            .attr('d', PROJECTION_PATH.projection(projection));
       }
       function dragstarted() {
@@ -849,7 +861,7 @@
           /**
            * create the SVG and initialize the mouse/touch handlers
            */
-          if (!document.getElementById(ID)) {
+          if (!document.getElementById('viz-' + ID + '-svg')) {
             /**
              * create an svg element that is a square - rectangular
              * maps will display with bottom and top margin, but globes
@@ -858,14 +870,14 @@
             d3.select(CONTAINER).append('svg')
                 .attr('aria-hidden', 'true')
                 .attr('height', WIDTH)
-                .attr('id', ID)
+                .attr('id', 'viz-' + ID + '-svg')
                 .attr('width', WIDTH)
               ;
 
             /**
              * add the map container
              */
-            d3.select('#'+ID).append('g').attr('id', ID+'-map');
+            d3.select('#viz-' + ID + '-svg').append('g').attr('id', 'viz-' + ID + '-svg-map');
           }
 
           /**
@@ -899,17 +911,17 @@
           /**
            * delete existing oceans, land, and markers
            */
-          d3.select('#'+ID+'-oceans').remove();
-          d3.select('#'+ID+'-countries').remove();
-          d3.select('#'+ID+'-markers').remove();
+          d3.select('#viz-' + ID + '-svg-oceans').remove();
+          d3.select('#viz-' + ID + '-svg-countries').remove();
+          d3.select('#viz-' + ID + '-svg-markers').remove();
 
           /**
            * draw the oceans
            */
-          d3.select('#'+ID+'-map').append('g').attr('id', ID+'-oceans')
+          d3.select('#viz-' + ID + '-svg-map').append('g').attr('id', 'viz-' + ID + '-svg-oceans')
               .append('path')
                 .datum({type:'Sphere'})
-                .attr('id', ID+'-oceans-path')
+                .attr('id', 'viz-' + ID + '-svg-oceans-path')
                 .attr('d', PROJECTION_PATH)
                 .style('fill', PALETTE.ocean)
                 .style('stroke', '#333')
@@ -919,7 +931,7 @@
           /**
            * draw the countries
            */
-          d3.select('#'+ID+'-map').append('g').attr('id', ID+'-countries')
+          d3.select('#viz-' + ID + '-svg-map').append('g').attr('id', 'viz-' + ID + '-svg-countries')
             .selectAll('path').data(cnt).enter().append('path')
               .attr('class', function(d, i) {
                  return 'country '+topoMap(d.id).iso;
@@ -939,7 +951,7 @@
           /**
            * assign the click handlers if defined
            */
-          d3.select('#'+ID+'-countries').selectAll('path.country')
+          d3.select('#viz-' + ID + '-svg-countries').selectAll('path.country')
             .on('click', function country_onClick(country) {
                var i;
                if (!DRAGGING) {
@@ -957,7 +969,7 @@
           /**
            * add the map interaction handlers
            */
-          d3.select('#'+ID+'-map')
+          d3.select('#viz-' + ID + '-svg-map')
               .call(zoom)
               .call( d3.behavior.drag()
                        .on('drag', dragged)
@@ -1189,7 +1201,7 @@
       }
 
       var path
-        , paths = d3.select('#'+ID+'-map').selectAll('path')
+        , paths = d3.select('#viz-' + ID + '-svg-map').selectAll('path')
         , projection = STYLE.projection
         , size = paths.size()
       ;
@@ -1278,7 +1290,7 @@
      * @return   {object}
      */
     function center() {
-      var svg = document.getElementById(ID)
+      var svg = document.getElementById('viz-' + ID + '-svg')
         , pos = [0, 0]
       ;
       if (svg) {
@@ -1399,8 +1411,8 @@
      * @return   {void}
      */
     function markerDelete() {
-      d3.select('#'+ID+'-markers-stable').remove();
-      d3.select('#'+ID+'-markers').remove();
+      d3.select('#viz-' + ID + '-svg-markers-stable').remove();
+      d3.select('#viz-' + ID + '-svg-markers').remove();
     }
 
     /**
@@ -1413,7 +1425,7 @@
         , data = MARKER_DATA                        /* array containing data        */
         , default_sort                              /* column to default sort       */
         , id_style = 'cjl-STable-style'             /* id for the style element     */
-        , id_table = ID + '-markers-stable'         /* unique table id              */
+        , id_table = 'viz-' + ID + '-svg-markers-stable'         /* unique table id              */
         , ndx                                       /* loop index                   */
         , rules = [ ]                               /* stylesheet rules             */
         , style = document.getElementById(id_style) /* style element                */
@@ -1515,7 +1527,7 @@
         /**
          * add the markers using the data provided
          */
-        d3.select('#'+ID+'-map').append('g').attr('id', ID+'-markers')
+        d3.select('#viz-' + ID + '-svg-map').append('g').attr('id', 'viz-' + ID + '-svg-markers')
            .selectAll('path').data(data).enter().append('path')
              .datum(function(d) {
                 var m = (MARKER_RELATIVE_SIZE ? (1/WIDTH) : 1)
@@ -1573,7 +1585,7 @@
         /**
          * assign the click handlers if defined
          */
-        d3.select('#'+ID+'-markers').selectAll('path.marker')
+        d3.select('#viz-' + ID + '-svg-markers').selectAll('path.marker')
           .on('click', function marker_onClick(marker) {
              var i;
              if (!DRAGGING) {
@@ -1803,7 +1815,7 @@
       /**
        * READ-ONLY
        */
-      var node = document.getElementById(ID+'-countries');
+      var node = document.getElementById('viz-' + ID + '-svg-countries');
       return node ? true : false;
     }
 
@@ -1827,7 +1839,7 @@
       coordinates = coordinates || LOCATION;
       if (STYLE && STYLE.projection) {
         STYLE.projection.rotate(coordinates);
-        d3.select('#'+ID)
+        d3.select('#viz-' + ID + '-svg')
           .selectAll('path')
           .attr('d', PROJECTION_PATH.projection(STYLE.projection));
       }
@@ -1918,7 +1930,7 @@
        * subscribe the handler to the creation event
        */
       EVENT_HANDLERS['routes-created'] = [function() {
-        d3.select('#'+ID+'-map').selectAll('g.route')
+        d3.select('#viz-' + ID + '-svg-map').selectAll('g.route')
                    .each(function() {
                       routeAnimate(this, duration, loop, marker, combined);
                     });
@@ -2135,7 +2147,7 @@
       var counter
         , destinations
         , group
-        , map = d3.select('#' + ID + '-map')
+        , map = d3.select('#viz-' + ID + '-svg-map')
         , origin
         , projection = (STYLE || { }).projection
         , routes
@@ -2174,7 +2186,7 @@
            * if we have an origin and at least one waypoint
            */
           if (origin && destinations) {
-            routes = routes || map.append('g').attr('id', ID + '-routes');
+            routes = routes || map.append('g').attr('id', 'viz-' + ID + '-svg-routes');
             /* create the route group */
             group = routes.append('g')
                    .attr('class', 'route')
@@ -2208,7 +2220,7 @@
                  , 'resumed'
                  , 'slowed'
                  ]
-      , ID = 'cjl-globe-'+Math.random().toString().replace(/\./, '')
+      , ID = parseFloat((new Date()).getTime()/100).toFixed(20).replace(/\./g, '')
       , LOCATION = [0, 0, 0]
       , MARKER_ANIMATION = 'pulse'
       , MARKER_ANIMATION_DURATION = 1500
@@ -2545,6 +2557,18 @@
       EVENT_HANDLERS['rendered'] = [rotationTimerStart];
 
       /**
+       * handle a config object passed in as the first parameter
+       */
+      if ( typeof CONTAINER === 'object' &&
+           CONTAINER !== null &&
+           CONTAINER.nodeType !== 1 ) {
+        DESCRIPTOR = CONTAINER.data;
+        STYLE = CONTAINER.style;
+        WIDTH = CONTAINER.width;
+        CONTAINER = CONTAINER.element;
+      }
+
+      /**
        * set the map style
        */
       STYLE = PROJECTIONS.map(STYLE || 'globe');
@@ -2577,6 +2601,8 @@
         if (DESCRIPTOR && DESCRIPTOR.nodeType !== 1) {
           DESCRIPTOR = null;
         }
+
+        window[SELF.id() + '-earth-viz'] = this;
 
         return this;
       } else {
