@@ -10,7 +10,7 @@ Each library is documented, and none are minified. If you want a minified versio
 ## Plug-ins in the collection
 
 ### *earth*
-Adds a marked map data visualization. The visualization has two clickable objects: `country` and `marker`, both of which can be referenced as `this` within the click handler. Each `country` has the properties `id` (the id from the topoJSON file), `iso` (the ISO 3166 Alpha-2 code for the country), and `name` (the name of the country in English). Each `marker` placed has a `longitude`, `latitude`, and `size` (in pixels).
+Adds a marked map data visualization. The visualization has two clickable objects: `country` and `marker`, both of which can be referenced as `this` within the click handler. Each `country` has the properties `id` (the id from the topoJSON file), `iso` (the ISO 3166 Alpha-2 code for the country), and `name` (the name of the country in English). Each `marker` placed has a `longitude`, `latitude`, and `size` (in pixels). The container can either be a container into which the visualization is rendered or an HTML table containing marker information. The `container` may be omitted if an HTML table containing marker information and with the class `earth-viz` is present.
 
 #### Syntax
 *object* d3.geo.earth([*string* container[, *number* width[, *string* style[, *string|HTMLElement* descriptor]]]])
@@ -68,6 +68,7 @@ Adds a marked map data visualization. The visualization has two clickable object
 
 #### Demo
 - [The Cathmhaol](http://prototypes.cathmhaol.com/earth/)
+- [The Cathmhaol](http://prototypes.cathmhaol.com/earth/earth2.htm)
 
 
 ### *jquery*
