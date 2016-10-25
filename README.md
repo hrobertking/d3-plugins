@@ -12,9 +12,19 @@ Each library is documented, and none are minified. If you want a minified versio
 ### *earth*
 Adds a marked map data visualization. The visualization has two clickable objects: `country` and `marker`, both of which can be referenced as `this` within the click handler. Each `country` has the properties `id` (the id from the topoJSON file), `iso` (the ISO 3166 Alpha-2 code for the country), and `name` (the name of the country in English). Each `marker` placed has a `longitude`, `latitude`, and `size` (in pixels).
 
-#### Syntax:
-*object* d3.geo.earth(*string* container[, *number* width[, *string* style[, *string|HTMLElement* descriptor]]])
+#### Syntax
+*object* d3.geo.earth([*string* container[, *number* width[, *string* style[, *string|HTMLElement* descriptor]]]])
 
+#### Events
+- ***accelerated***: Fired when the speed at which a globe is rotating increases.
+- ***paused***: Fired when a rotating globe is stopped.
+- ***rendered***: Fired when a project is rendered.
+- ***resumed***: Fired when a stopped globe resumes rotation.
+- ***slowed***: Fired when the speed at which a globe is rotating decreases.
+
+#### Properties
+
+#### Methods
 - ***void* *instance*.addOnCountryClick(*function* handler)**: Adds a click handler to the <em>countries</em>. The parameter <em>handler</em> is the handler is a JavaScript function executed when a country on the map is clicked. The 'this' keyword in the handler function will refer to the country clicked. The properties 'id', which is the id from the topoJSON file, 'iso', which is the ISO 3166 Alpha-2 code for the country, and 'name', which is the name of the country in English are among the properties available through the 'this' object.
 - ***void* *instance*.addOnMarkerClick(*function* handler)**: Adds a click handler to the <em>markers</em>. The parameter <em>handler</em> is the handler is a JavaScript function executed when a marker on the map is clicked. The 'this' keyword in the handler function will refer to the marker clicked.
 - ***string* *instance*.borderColor([*string* color])**: Sets (if `color` is passed) and returns the hexadecimal value used when drawing borders. Default is '#ff0000'.
@@ -48,20 +58,28 @@ Adds a marked map data visualization. The visualization has two clickable object
 - ***void* *instance*.transition(*string* style[, *integer* duration])**: Animates the transition from the current map style to the map style provided. Animation runs for the specified duration (in milliseconds). Default duration is 750ms.
 - ***void* *instance*.travel(*string*|*object*|*object[]* data, *object* marker, *number* duration, *boolean* loop, *boolean* combined)**: Animates travel along routes defined in the specified data - identified by a resource object (i.e., a URL string or an object with 'name' and type' properties) or an array of objects with 'origin' and 'destination' properties - using the specified marker. The animation runs for the specified duration (in milliseconds) or 1000ms.
 
-#### Requires:
+#### Examples
+
+#### Requires
 - d3 --- http://d3js.org/d3.v3.min.js
 - d3 geo projections --- http://d3js.org/d3.geo.projection.v0.min.js
 - d3 topojson --- http://d3js.org/topojson.v1.min.js
 - a topoJSON data file
 
-#### Demo:
+#### Demo
 - [The Cathmhaol](http://prototypes.cathmhaol.com/earth/)
 
 
 ### *jquery*
 Adds jQuery traversal methods to D3 selections.
 
-#### Syntax:
+#### Syntax
+
+#### Events
+
+#### Properties
+
+#### Methods
 - ***selection* *selection*.children([*string* selector])**: Get the children of each element in the set of matched elements, optionally filtered by a selector.
 - ***selection* *selection*.closest([*string* selector])**: For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
 - ***selection* *selection*.contents([*string* selector])**: Get the children of each element in the set of matched elements, including text and comment nodes.
@@ -83,33 +101,39 @@ Adds jQuery traversal methods to D3 selections.
 - ***selection* *selection*.siblings([*string* selector])**: Get the siblings of each element in the set of matched elements, optionally filtered by a selector.
 - ***number* *selection*.width()**: Returns the width, in pixels, of the item
 
-Examples:
+#### Examples
 - var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active');
 - var sel = d3.select('p').first();
 - var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active').next();
 - var sel = d3.select('.control.clicked').closest('.filmstrip').find('.viewer .active').prevUntil('#image-3');
 - var sel = d3.select('.control.clicked').closest('.filmstrip').children().not('active');
 
-#### Requires:
+#### Requires
 - d3 --- http://d3js.org/d3.v3.min.js
 
-#### Demo:
+#### Demo
 - 
 
 ### *table*
 Reads data from an HTML table. An optional configuration object containing: the index of the row or column containing property names - as 'row' or 'column', the row or column index where data starts - as 'start', the row or column index where data ends - as 'end', and a callback function - as 'callback', may be specified as the second argument. If 'row' or 'column' are not specified, the property names are taken from the first row of either the thead - if it exists - or the table. If a callback is specified, the callback will be invoked when the data is loaded or an error occurs; the callback is invoked with two arguments: the error, if any, and the data as an array of JavaScript objects. The data is undefined if an error occurs. If no callback is specified, the data is returned as an array.
 
-#### Syntax:
+#### Syntax
 *object[]* d3.table(*HTMLElement|string* table[, *object* config[, *function* callback]]);
 
-Examples:
+#### Events
+
+#### Properties
+
+#### Methods
+
+#### Examples
 - var data = d3.table('#visitor-by-os');
 - var data = d3.table('#visitor-by-os', {row:0, start:1});
 - d3.table('#visitor-by-os', {column:0, start:1, end:8, callback:function(error, data) { if (data) {for (var i in data) { console.log(JSON.stringify(data [i])); }} } });
 - d3.table('#visitor-by-os', function(error, data) { if (data) {for (var i in data) { console.log(JSON.stringify(data [i])); }} });
 
-#### Requires:
+#### Requires
 - d3 --- http://d3js.org/d3.v3.min.js
 
-#### Demo:
+#### Demo
 - [The Cathmhaol](http://prototypes.cathmhaol.com/d3-table/)
