@@ -107,19 +107,20 @@
          * If the element is a table, use the table as marker data and
          * create a container for the visualization
          */
-        if (CONTAINER.nodeName === 'TABLE') {
+        if (CONTAINER.nodeName.toLowerCase() === 'table') {
           is_table = true;
 
           /**
            * Set the table descriptor
            */
           DESCRIPTOR = CONTAINER;
+          ID = CONTAINER.id || ID;
 
           /**
            * Set the visualization container
            */
           CONTAINER = document.createElement('div');
-          CONTAINER.id = DESCRIPTOR.getAttribute('id');
+          CONTAINER.id = 'viz-' + ID + '-container';
 
           /**
            * Hide the table descriptor
@@ -256,6 +257,17 @@
         PALETTE.marker = value;
       }
       return PALETTE.marker;
+    };
+
+    /**
+     * The ID attribute of the marker data table
+     * @type     {string}
+     */
+    this.markerDataId = function(value) {
+      if (typeof value === 'string' && !(/^[0-9]/).test(value)) {
+        MARKER_ID = isNaN(value) ? value : 'viz-' + ID + '-markers-table';
+      }
+      return MARKER_ID;
     };
 
     /**
@@ -445,6 +457,11 @@
          */
         table = getElement(table);
         if (table && table.nodeName.toLowerCase() === 'table') {
+          /**
+           * set the marker table id
+           */
+          SELF.markerDataId(table.id);
+
           DESCRIPTOR = DESCRIPTOR || table.parentNode;
           MARKER_DATA = [ ];
 
@@ -1411,7 +1428,7 @@
      * @return   {void}
      */
     function markerDelete() {
-      d3.select('#viz-' + ID + '-svg-markers-stable').remove();
+      d3.select('#viz-' + ID + '-svg-markers-table').remove();
       d3.select('#viz-' + ID + '-svg-markers').remove();
     }
 
@@ -1420,23 +1437,23 @@
      * @return   {void}
      */
     function markerDraw() {
-      var columns = MARKER_DESCRIPTION              /* column/object property       */
-        , container = DESCRIPTOR || CONTAINER       /* contains the table           */
-        , data = MARKER_DATA                        /* array containing data        */
-        , default_sort                              /* column to default sort       */
-        , id_style = 'cjl-STable-style'             /* id for the style element     */
-        , id_table = 'viz-' + ID + '-svg-markers-stable'         /* unique table id              */
-        , ndx                                       /* loop index                   */
-        , rules = [ ]                               /* stylesheet rules             */
-        , style = document.getElementById(id_style) /* style element                */
-        , style_exists = false                      /* flag indicating style exists */
-        , table                                     /* the table                    */
-        , tbody                                     /* the body of the table        */
-        , tcells                                    /* cells in the table           */
-        , tfoot                                     /* the table footer             */
-        , thead                                     /* the header of the table      */
-        , trows                                     /* rows in the table            */
-        , marker_lg                                 /* the largest marker size      */
+      var columns = MARKER_DESCRIPTION                  /* column/object property   */
+        , container = DESCRIPTOR || CONTAINER           /* contains the table       */
+        , data = MARKER_DATA                            /* array containing data    */
+        , default_sort                                  /* column to default sort   */
+        , id_style = 'cjl-STable-style'                 /* id for the style element */
+        , id_table                                      /* id for the marker table  */
+        , ndx                                           /* loop index               */
+        , rules = [ ]                                   /* stylesheet rules         */
+        , style = document.getElementById(id_style)     /* style element            */
+        , style_exists = false                          /* style exists             */
+        , table                                         /* the table                */
+        , tbody                                         /* the body of the table    */
+        , tcells                                        /* cells in the table       */
+        , tfoot                                         /* the table footer         */
+        , thead                                         /* the header of the table  */
+        , trows                                         /* rows in the table        */
+        , marker_lg                                     /* the largest marker size  */
       ;
 
       /**
@@ -1504,6 +1521,8 @@
               .style('stroke-width', 0)
         ;
       }
+
+      id_table = SELF.markerDataId(SELF.markerDataId() || 'viz-' + ID + '-markers-table');
 
       marker_lg = d3.max(data, function(d) { return d.size || d.Size; });
 
@@ -2228,6 +2247,7 @@
       , MARKER_DESCRIPTION
       , MARKER_FILE = {}
       , MARKER_HANDLERS = [ ]
+      , MARKER_ID
       , MARKER_RELATIVE_SIZE = false
       , MARKER_SIZE = 3
       , MARKER_TABLE = false
