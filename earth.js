@@ -120,7 +120,7 @@
            * Set the visualization container
            */
           CONTAINER = document.createElement('div');
-          CONTAINER.id = 'viz-' + ID + '-container';
+          CONTAINER.id = (!isNaN(ID) ? 'viz-' : '') + ID + '-container';
 
           /**
            * Hide the table descriptor
@@ -210,14 +210,14 @@
     };
 
     /**
-     * The ID of the SVG used to display the map
+     * The ID of the visualization
      * @type     {string}
      */
     this.id = function(value) {
       /**
        * READ-ONLY
        */
-      return ID;
+      return SELF.markerDataId() + '-earth-viz';
     };
 
     /**
@@ -264,9 +264,20 @@
      * @type     {string}
      */
     this.markerDataId = function(value) {
+      var old = MARKER_ID;
+
       if (typeof value === 'string' && !(/^[0-9]/).test(value)) {
-        MARKER_ID = isNaN(value) ? value : 'viz-' + ID + '-markers-table';
+        MARKER_ID = isNaN(value) ? value : 'viz-' + ID;
       }
+
+      /**
+       * if the marker id has changed, fix the window reference
+       */
+      if (old !== MARKER_ID) {
+        delete window[old + '-earth-viz'];
+        window[SELF.id()] = SELF;
+      }
+
       return MARKER_ID;
     };
 
@@ -1522,7 +1533,7 @@
         ;
       }
 
-      id_table = SELF.markerDataId(SELF.markerDataId() || 'viz-' + ID + '-markers-table');
+      id_table = SELF.markerDataId(SELF.markerDataId() || 'viz-' + ID);
 
       marker_lg = d3.max(data, function(d) { return d.size || d.Size; });
 
@@ -2622,7 +2633,7 @@
           DESCRIPTOR = null;
         }
 
-        window[SELF.id() + '-earth-viz'] = this;
+        window[SELF.id()] = this;
 
         return this;
       } else {
